@@ -15,7 +15,7 @@ class SessionScreen extends StatefulWidget {
 class _SessionScreenState extends State<SessionScreen> {
   @override
   void dispose() {
-    widget.viewModel.dispose(); // Clean up timer
+    widget.viewModel.dispose();
     super.dispose();
   }
 
