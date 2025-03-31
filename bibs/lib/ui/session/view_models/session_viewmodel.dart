@@ -15,10 +15,10 @@ class SessionViewModel extends ChangeNotifier{
 
   String get formattedTime {
     final milli = _stopwatch.elapsed.inMilliseconds;
-    final milliseconds = (milli % 1000).toString().padLeft(3, "0");
-    final seconds = ((milli ~/ 1000) % 60).toString().padLeft(2, "0");
-    final minutes = ((milli ~/ 1000) ~/ 60).toString().padLeft(2, "0");
-    return "$minutes:$seconds:$milliseconds";
+    final milliseconds = (milli % 1000).toString().padLeft(3, '0');
+    final seconds = ((milli ~/ 1000) % 60).toString().padLeft(2, '0');
+    final minutes = ((milli ~/ 1000) ~/ 60).toString().padLeft(2, '0');
+    return '$minutes:$seconds:$milliseconds';
   }
 
   bool get isRunning => _stopwatch.isRunning;
