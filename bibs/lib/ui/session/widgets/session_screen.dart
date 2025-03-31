@@ -23,7 +23,7 @@ class _SessionScreenState extends State<SessionScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Session"),
+        title: Text('Session'),
       ),
       body: SafeArea(
         child: Center(
@@ -38,7 +38,7 @@ class _SessionScreenState extends State<SessionScreen> {
                 ),
                 CupertinoButton(
                   onPressed: widget.viewModel.reset,
-                  child: Text("Reset"),
+                  child: Text('Reset'),
                 )
               ],
             ),
