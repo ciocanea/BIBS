@@ -4,10 +4,18 @@ import 'package:provider/single_child_widget.dart';
 import '../data/repositories/auth_repository.dart';
 import '../data/repositories/auth_repository_remote.dart';
 import '../data/services/api/auth_api.dart';
+import '../data/services/local/shared_prefrences_service.dart';
 
 List<SingleChildWidget> get providers {
   return [
     Provider(create: (context) => AuthClient()),
-    ChangeNotifierProvider(create: (context) => AuthRepositoryRemote(authClient: context.read()) as AuthRepository),
+    Provider(create: (context) => SharedPreferencesService()),
+    ChangeNotifierProvider(
+      create: (context) => 
+        AuthRepositoryRemote(
+          authClient: context.read(), 
+          sharedPreferencesService: context.read()
+        ) as AuthRepository
+    ),
   ];
 }
