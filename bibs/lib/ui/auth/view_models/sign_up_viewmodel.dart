@@ -10,7 +10,7 @@ class SignUpViewModel extends ChangeNotifier {
 
   final AuthRepository _authRepository;
 
-  Future<Result<void>> signUp (String email, String password) async {
+  Future<Result<void>> signUpWithEmailPassword (String email, String password) async {
     final result = await _authRepository.signUpWithEmailPassword(
       email: email,
       password: password,

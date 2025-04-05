@@ -1,9 +1,9 @@
-import 'package:bibs/ui/auth/view_models/sign_up_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../routing/routes.dart';
 import '../../../utils/result.dart';
+import '../view_models/sign_up_viewmodel.dart';
 
 class SignUpScreen extends StatefulWidget{
   const SignUpScreen ({super.key, required this.viewModel});
@@ -62,7 +62,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ElevatedButton(
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
-                      final result = await widget.viewModel.signUp(_emailController.text, _passwordController.text);
+                      final result = await widget.viewModel.signUpWithEmailPassword(_emailController.text, _passwordController.text);
 
                       if(result is Error<void>) {
                         ScaffoldMessenger.of(context).showSnackBar(
@@ -83,7 +83,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         );
                     }
                   },
-                  child: const Text('Submit'),
+                  child: const Text('Sign Up'),
                 ),
               ],
             ),
