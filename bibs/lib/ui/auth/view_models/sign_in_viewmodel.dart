@@ -4,14 +4,15 @@ import '../../../data/repositories/auth_repository.dart';
 import '../../../utils/result.dart';
 
 
-class SignUpViewModel extends ChangeNotifier {
-  SignUpViewModel ({required AuthRepository authRepository})
-  : _authRepository = authRepository;
+class SignInViewModel extends ChangeNotifier {
+  SignInViewModel ({
+    required AuthRepository authRepository
+  }) : _authRepository = authRepository;
 
   final AuthRepository _authRepository;
 
-  Future<Result<void>> signUpWithEmailPassword (String email, String password) async {
-    final result = await _authRepository.signUpWithEmailPassword(
+  Future<Result<void>> signInWithEmailPassword (String email, String password) async {
+    final result = await _authRepository.signInWithEmailPassword(
       email: email,
       password: password,
     );

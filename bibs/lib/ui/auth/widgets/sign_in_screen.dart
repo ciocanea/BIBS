@@ -3,18 +3,18 @@ import 'package:go_router/go_router.dart';
 
 import '../../../routing/routes.dart';
 import '../../../utils/result.dart';
-import '../view_models/sign_up_viewmodel.dart';
+import '../view_models/sign_in_viewmodel.dart';
 
-class SignUpScreen extends StatefulWidget{
-  const SignUpScreen ({super.key, required this.viewModel});
+class SignInScreen extends StatefulWidget{
+  const SignInScreen ({super.key, required this.viewModel});
 
-  final SignUpViewModel viewModel;
+  final SignInViewModel viewModel;
 
   @override
-  State<StatefulWidget> createState() => _SignUpScreenState();
+  State<StatefulWidget> createState() => _SignInScreenState();
 }
 
-class _SignUpScreenState extends State<SignUpScreen> {
+class _SignInScreenState extends State<SignInScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   final TextEditingController _emailController = TextEditingController();
@@ -25,7 +25,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Sign Up'),
+        title: Text('Sign In'),
       ),
       body: SafeArea(
         child: Center(
@@ -62,7 +62,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ElevatedButton(
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
-                      final result = await widget.viewModel.signUpWithEmailPassword(_emailController.text, _passwordController.text);
+                      final result = await widget.viewModel.signInWithEmailPassword(_emailController.text, _passwordController.text);
 
                       if(result is Error<void>) {
                         ScaffoldMessenger.of(context).showSnackBar(
@@ -83,8 +83,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         );
                     }
                   },
-                  child: const Text('Sign Up'),
+                  child: const Text('Sign In'),
                 ),
+                ElevatedButton(
+                  onPressed: () {
+                    context.go(Routes.signUp);
+                  },
+                child: const Text('Sign Up'))
               ],
             ),
           ),

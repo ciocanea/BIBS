@@ -2,16 +2,23 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+import '../../../data/repositories/auth_repository.dart';
+import '../../../utils/result.dart';
+
 class SessionViewModel extends ChangeNotifier{
   final Stopwatch _stopwatch = Stopwatch();
   late final Timer _timer;
 
-  SessionViewModel() {
+  SessionViewModel({
+    required AuthRepository authRepository
+  }) : _authRepository = authRepository {
     _timer = Timer.periodic(
       const Duration(milliseconds: 30),
       (_) { notifyListeners(); }
     );
   }
+
+  final AuthRepository _authRepository;
 
   String get formattedTime {
     final milli = _stopwatch.elapsed.inMilliseconds;
@@ -44,5 +51,15 @@ class SessionViewModel extends ChangeNotifier{
   void dispose() {
     _timer.cancel();
     super.dispose();
+  }
+
+  Future<Result<void>> signOut () async {
+    final result = await _authRepository.signOut();
+
+    if(result is Error<void>) {
+      print(result.error);
+    }
+
+    return result;
   }
 }
