@@ -2,7 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+import '../../../data/models/user_profile_model.dart';
 import '../../../data/repositories/auth_repository.dart';
+import '../../../data/repositories/user/user_repository.dart';
 import '../../../utils/result.dart';
 
 class SessionViewModel extends ChangeNotifier{
@@ -10,8 +12,10 @@ class SessionViewModel extends ChangeNotifier{
   late final Timer _timer;
 
   SessionViewModel({
-    required AuthRepository authRepository
-  }) : _authRepository = authRepository {
+    required AuthRepository authRepository,
+    required UserRepository userRepository,
+  }) : _authRepository = authRepository,
+       _userRepository = userRepository {
     _timer = Timer.periodic(
       const Duration(milliseconds: 30),
       (_) { notifyListeners(); }
@@ -19,6 +23,25 @@ class SessionViewModel extends ChangeNotifier{
   }
 
   final AuthRepository _authRepository;
+  final UserRepository _userRepository;
+
+  UserProfile? _userProfile;
+  UserProfile? get userProfile => _userProfile;
+
+  Future<Result<void>> load() async {
+    try {
+      final result = await _userRepository.getUserProfile();
+      switch (result) {
+        case Ok<UserProfile>():
+          _userProfile = result.value;
+          return Result.ok(null);
+        case Error<UserProfile>():
+          return Result.error(result.error);
+      }
+    } finally {
+      notifyListeners();
+    }
+  }
 
   String get formattedTime {
     final milli = _stopwatch.elapsed.inMilliseconds;
