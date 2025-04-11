@@ -4,6 +4,8 @@ import '../../utils/result.dart';
 
 abstract class AuthRepository extends ChangeNotifier{
 
+  bool get resetTrigger;
+
   Future<bool> get isAuthenticated;
 
   Future<Result<void>> signUpWithEmailPassword ({required String email, required String password});
