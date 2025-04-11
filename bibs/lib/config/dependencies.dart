@@ -1,14 +1,18 @@
+import 'package:bibs/data/services/api/user_api.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 
 import '../data/repositories/auth_repository.dart';
 import '../data/repositories/auth_repository_remote.dart';
+import '../data/repositories/user/user_repository.dart';
+import '../data/repositories/user/user_repository_remote.dart';
 import '../data/services/api/auth_api.dart';
 import '../data/services/local/shared_prefrences_service.dart';
 
 List<SingleChildWidget> get providers {
   return [
     Provider(create: (context) => AuthClient()),
+    Provider(create: (context) => UserClient()),
     Provider(create: (context) => SharedPreferencesService()),
     ChangeNotifierProvider(
       create: (context) => 
@@ -17,5 +21,16 @@ List<SingleChildWidget> get providers {
           sharedPreferencesService: context.read()
         ) as AuthRepository
     ),
+    ProxyProvider<AuthRepository, UserRepository>(
+      update: (context, authRepo, _) {
+        authRepo.resetTrigger;
+
+        return UserRepositoryRemote(
+          userClient: context.read(),
+          sharedPreferencesService: context.read(),
+        );
+      },
+    ),
+    
   ];
 }

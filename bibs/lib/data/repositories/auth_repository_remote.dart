@@ -18,8 +18,10 @@ class AuthRepositoryRemote extends AuthRepository {
 
   String? _authToken;
   bool? _isAuthenticated;
+  
+  bool get resetTrigger => _isAuthenticated ?? false;
 
-  Future<void> _fetch() async {
+  Future<void> _fetch () async {
     final sharedPreferencesResult = await _sharedPreferencesService.fetchToken();
     switch (sharedPreferencesResult) {
       case Ok<String?>():
@@ -35,7 +37,7 @@ class AuthRepositoryRemote extends AuthRepository {
     }
   }
 
-  Future<bool> _refreshSession() async {
+  Future<bool> _refreshSession () async {
     final refreshResult = await _authClient.refreshSession();
     switch (refreshResult) {
       case Ok<AuthResponse>():
@@ -82,6 +84,23 @@ class AuthRepositoryRemote extends AuthRepository {
 
       switch (result) {
         case Ok<AuthResponse>():
+          final session = result.value.session; 
+          final user = result.value.user;
+
+          if(session == null) {
+            return Result.error(Exception('Session is null.'));
+          }
+
+          if(user == null) {
+            return Result.error(Exception('User is null.'));
+          }
+
+          _authToken = session.accessToken;
+          _isAuthenticated = true;
+
+          await _sharedPreferencesService.saveUserId(user.id);
+          await _sharedPreferencesService.saveToken(session.accessToken);
+
           return Result.ok(null);
         case Error<AuthResponse>():
           return Result.error(result.error);
@@ -100,14 +119,23 @@ class AuthRepositoryRemote extends AuthRepository {
       switch (result) {
         case Ok<AuthResponse>():
           final session = result.value.session; 
+          final user = result.value.user;
+
           if(session == null) {
             return Result.error(Exception('Session is null.'));
           }
-          
+
+          if(user == null) {
+            return Result.error(Exception('User is null.'));
+          }
+
           _authToken = session.accessToken;
           _isAuthenticated = true;
 
-          return await _sharedPreferencesService.saveToken(session.accessToken);
+          await _sharedPreferencesService.saveUserId(user.id);
+          await _sharedPreferencesService.saveToken(session.accessToken);
+
+          return Result.ok(null);
         case Error<AuthResponse>():
           return Result.error(result.error);
       }
@@ -118,17 +146,25 @@ class AuthRepositoryRemote extends AuthRepository {
   }
   
   @override
-  Future<Result<void>> signOut () async{
-    final result = await _authClient.signOut();
+  Future<Result<void>> signOut () async {
+    try {
+      final result = await _authClient.signOut();
 
-    switch (result) {
-      case Ok<void>():
-        _authToken = null;
-        _isAuthenticated = false;
+      switch (result) {
+        case Ok<void>():
+          _authToken = null;
+          _isAuthenticated = false;
 
-        return await _sharedPreferencesService.saveToken(null);
-      case Error<void>():
-        return Result.error(result.error);
+          await _sharedPreferencesService.saveToken(null);
+          await _sharedPreferencesService.saveUserId(null);
+
+          return Result.ok(null);
+        case Error<void>():
+          return Result.error(result.error);
+      }
+    }
+    finally {
+      notifyListeners();
     }
   }
 }

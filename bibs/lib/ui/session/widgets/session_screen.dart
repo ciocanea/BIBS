@@ -16,6 +16,19 @@ class SessionScreen extends StatefulWidget {
 }
 
 class _SessionScreenState extends State<SessionScreen> {
+
+  @override
+  void initState() {
+    super.initState();
+    widget.viewModel.load().then((result) {
+      if (result is Error) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to load profile: ${result.error}'))
+        );
+      }
+    });
+  }
+
   @override
   void dispose() {
     widget.viewModel.dispose();
@@ -52,19 +65,29 @@ class _SessionScreenState extends State<SessionScreen> {
         child: Center(
           child: ListenableBuilder(
             listenable: widget.viewModel,
-            builder:(context, _) => Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                CupertinoButton(
-                  onPressed: widget.viewModel.startStop,
-                  child: Text(widget.viewModel.formattedTime),
-                ),
-                CupertinoButton(
-                  onPressed: widget.viewModel.reset,
-                  child: Text('Reset'),
-                )
-              ],
-            ),
+            builder:(context, _) {
+              final userProfile = widget.viewModel.userProfile;
+
+              if(userProfile == null) {
+                return const CircularProgressIndicator();
+              }
+
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(userProfile.id),
+                  Text(userProfile.username),
+                  CupertinoButton(
+                    onPressed: widget.viewModel.startStop,
+                    child: Text(widget.viewModel.formattedTime),
+                  ),
+                  CupertinoButton(
+                    onPressed: widget.viewModel.reset,
+                    child: Text('Reset'),
+                  )
+                ],
+              );
+            }
           ),
         ),
       ),

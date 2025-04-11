@@ -22,7 +22,10 @@ GoRouter router () => GoRouter(
       path: Routes.session,
       builder: (context, state) {
         return SessionScreen(
-          viewModel: SessionViewModel(authRepository: context.read())
+          viewModel: SessionViewModel(
+            authRepository: context.read(),
+            userRepository: context.read(),
+          )
         );
       },
     ),
