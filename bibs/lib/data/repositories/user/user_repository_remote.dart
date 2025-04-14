@@ -1,4 +1,6 @@
 
+import 'package:logging/logging.dart';
+
 import '../../../utils/result.dart';
 import '../../models/user_profile_model.dart';
 import '../../services/api/user_api.dart';
@@ -16,11 +18,14 @@ class UserRepositoryRemote extends UserRepository {
   final UserClient _userClient;
   final SharedPreferencesService _sharedPreferencesService;
 
+  final _log = Logger('UserRepositoryRemote');
+
   UserProfile? _userProfile;
 
   @override
   Future<Result<UserProfile>> getUserProfile () async {
     if(_userProfile != null) {
+      _log.info('User profile already loaded in memory. Returning cached profile.');
       return Future.value(Result.ok(_userProfile!));
     }
 
@@ -31,6 +36,7 @@ class UserRepositoryRemote extends UserRepository {
       case Ok<String?>():
         id = sharedPrefResult.value;
       case Error<String?>():
+        _log.severe('Failed to fetch user ID: ${sharedPrefResult.error}');
         return Result.error(sharedPrefResult.error);
     }
 
@@ -43,8 +49,11 @@ class UserRepositoryRemote extends UserRepository {
       case Ok<ProfileResponse>():
         final userProfile = UserProfile.fromJson(userResult.value.profile);
         _userProfile = userProfile;
+
+        _log.info('User profile successfully fetched and cached.');
         return Result.ok(userProfile);
       case Error<ProfileResponse>():
+        _log.severe('Failed to fetch user profile: ${userResult.error}');
         return Result.error(userResult.error);
     }
   }
