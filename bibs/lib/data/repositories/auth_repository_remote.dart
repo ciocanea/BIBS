@@ -1,4 +1,5 @@
 import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:logging/logging.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../services/local/shared_prefrences_service.dart';
@@ -16,6 +17,8 @@ class AuthRepositoryRemote extends AuthRepository {
   final AuthClient _authClient;
   final SharedPreferencesService _sharedPreferencesService;
 
+  final _log = Logger('AuthRepositoryRemote');
+
   String? _authToken;
   bool? _isAuthenticated;
   
@@ -32,7 +35,7 @@ class AuthRepositoryRemote extends AuthRepository {
           case Ok<Session?>():
             _authToken = result.value?.accessToken;
           case Error<Session?>():
-            print('Failed to fetch access token.');
+            _log.warning('Failed to fetch access token from current session.');
         }
     }
   }
@@ -52,6 +55,7 @@ class AuthRepositoryRemote extends AuthRepository {
       case Error<AuthResponse>():
         _authToken = null;
         await _sharedPreferencesService.saveToken(null);
+        _log.warning('Failed to refresh session: ${refreshResult.error}');
         return false;
     }
   }
@@ -88,10 +92,12 @@ class AuthRepositoryRemote extends AuthRepository {
           final user = result.value.user;
 
           if(session == null) {
+            _log.warning('Sign up failed: Session is null.');
             return Result.error(Exception('Session is null.'));
           }
 
           if(user == null) {
+            _log.warning('Sign up failed: User is null.');
             return Result.error(Exception('User is null.'));
           }
 
@@ -101,8 +107,10 @@ class AuthRepositoryRemote extends AuthRepository {
           await _sharedPreferencesService.saveUserId(user.id);
           await _sharedPreferencesService.saveToken(session.accessToken);
 
+          _log.info('Sign up successful. Token and user ID saved.');
           return Result.ok(null);
         case Error<AuthResponse>():
+          _log.severe('Sign up failed: ${result.error}');
           return Result.error(result.error);
       }
     }
@@ -122,10 +130,12 @@ class AuthRepositoryRemote extends AuthRepository {
           final user = result.value.user;
 
           if(session == null) {
+            _log.warning('Sign in failed: Session is null.');
             return Result.error(Exception('Session is null.'));
           }
 
           if(user == null) {
+            _log.warning('Sign in failed: User is null.');
             return Result.error(Exception('User is null.'));
           }
 
@@ -135,8 +145,10 @@ class AuthRepositoryRemote extends AuthRepository {
           await _sharedPreferencesService.saveUserId(user.id);
           await _sharedPreferencesService.saveToken(session.accessToken);
 
+          _log.info('Sign in successful. Token and user ID saved.');
           return Result.ok(null);
         case Error<AuthResponse>():
+          _log.severe('Sign in failed: ${result.error}');
           return Result.error(result.error);
       }
     }
@@ -158,8 +170,10 @@ class AuthRepositoryRemote extends AuthRepository {
           await _sharedPreferencesService.saveToken(null);
           await _sharedPreferencesService.saveUserId(null);
 
+          _log.info('Sign out successful. Token and user ID cleared.');
           return Result.ok(null);
         case Error<void>():
+          _log.severe('Sign out failed: ${result.error}');
           return Result.error(result.error);
       }
     }
