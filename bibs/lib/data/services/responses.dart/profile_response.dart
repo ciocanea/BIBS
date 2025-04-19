@@ -1,5 +1,5 @@
-class ProfileResponse {
+class UserProfileResponse {
   final Map<String, dynamic> profile;
 
-  ProfileResponse({required this.profile});
+  UserProfileResponse({required this.profile});
 }
