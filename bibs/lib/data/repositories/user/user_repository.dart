@@ -5,4 +5,8 @@ import '../../../utils/result.dart';
 abstract class UserRepository {
 
   Future<Result<UserProfile>> getUserProfile ();
+
+  Future<Result<UserProfile>> setUserCampus ({required String newCampus});
+
+  Future<Result<void>> setUserTime ({required int time});
 }

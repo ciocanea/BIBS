@@ -22,6 +22,7 @@ class AuthRepositoryRemote extends AuthRepository {
   String? _authToken;
   bool? _isAuthenticated;
   
+  @override
   bool get resetTrigger => _isAuthenticated ?? false;
 
   Future<void> _fetch () async {
@@ -30,10 +31,10 @@ class AuthRepositoryRemote extends AuthRepository {
       case Ok<String?>():
         _authToken = sharedPreferencesResult.value;
       case Error<String?>():
-        final result = await _authClient.currentSession();
-        switch (result) {
+        final authResult = await _authClient.currentSession();
+        switch (authResult) {
           case Ok<Session?>():
-            _authToken = result.value?.accessToken;
+            _authToken = authResult.value?.accessToken;
           case Error<Session?>():
             _log.warning('Failed to fetch access token from current session.');
         }
