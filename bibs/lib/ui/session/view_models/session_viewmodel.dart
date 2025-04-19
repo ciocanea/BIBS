@@ -38,7 +38,24 @@ class SessionViewModel extends ChangeNotifier{
         case Error<UserProfile>():
           return Result.error(result.error);
       }
-    } finally {
+    } 
+    finally {
+      notifyListeners();
+    }
+  }
+
+  Future<Result<void>> setUserCampus(String newCampus) async {
+    try {
+      final result = await _userRepository.setUserCampus(newCampus: newCampus);
+      switch (result) {
+        case Ok<UserProfile>():
+          _userProfile = result.value;
+          return Result.ok(null);
+        case Error<UserProfile>():
+          return Result.error(result.error);
+      }
+    }
+    finally {
       notifyListeners();
     }
   }
@@ -64,10 +81,17 @@ class SessionViewModel extends ChangeNotifier{
     notifyListeners();
   }
 
-  void reset() {
-    _stopwatch.reset();
-    
-    notifyListeners();
+  Future<Result<void>> reset() async {
+    try {
+      final result = await _userRepository.setUserTime(time: _stopwatch.elapsedMilliseconds);
+
+      _stopwatch.reset();
+      
+      return result;
+    }
+    finally {
+      notifyListeners();
+    }    
   }
 
   @override

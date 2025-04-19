@@ -27,6 +27,7 @@ class _SessionScreenState extends State<SessionScreen> {
         );
       }
     });
+    widget.viewModel.setUserCampus('TU-Delft');
   }
 
   @override
@@ -77,6 +78,7 @@ class _SessionScreenState extends State<SessionScreen> {
                 children: [
                   Text(userProfile.id),
                   Text(userProfile.username),
+                  Text(userProfile.campus ?? 'null'),
                   CupertinoButton(
                     onPressed: widget.viewModel.startStop,
                     child: Text(widget.viewModel.formattedTime),
