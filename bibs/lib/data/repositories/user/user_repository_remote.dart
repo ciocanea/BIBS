@@ -92,6 +92,39 @@ class UserRepositoryRemote extends UserRepository {
   }
 
   @override
+  Future<Result<int>> getUserTime () async {
+    String? id;
+    String? campus;
+    if(_userProfile != null) {
+      id = _userProfile!.id;
+      campus = _userProfile!.campus;
+    }
+    else {
+      final fetchResult = await _fetchUser();
+      switch (fetchResult) {
+        case Ok<UserProfile>():
+          id = fetchResult.value.id;
+          campus = fetchResult.value.campus;
+        case Error<UserProfile>():
+          return Result.error(fetchResult.error);
+      }
+    }
+
+    if(campus == null) {
+      return Result.error(Exception('User has no campus selected.'));
+    }
+
+    final getTimeResult = await _userClient.getUserTime(id, campus);
+    switch (getTimeResult) {
+      case Ok<UserTimeResponse>():
+        return Result.ok(getTimeResult.value.time['time']);
+      case Error<UserTimeResponse>():
+        _log.severe('Failed to get user time: ${getTimeResult.error}.');
+        return Result.error(getTimeResult.error);
+    }
+  }
+
+  @override
   Future<Result<void>> setUserTime ({required int time}) async {
     String? id;
     String? campus;
