@@ -8,5 +8,7 @@ abstract class UserRepository {
 
   Future<Result<UserProfile>> setUserCampus ({required String newCampus});
 
+  Future<Result<int>> getUserTime ();
+
   Future<Result<void>> setUserTime ({required int time});
 }
