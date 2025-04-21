@@ -43,6 +43,7 @@ GoRouter router () => GoRouter(
             return StatsScreen(
               viewModel: StatsViewModel(
                 userRepository: context.read(),
+                leaderboardRepository: context.read()
               )
             );
           },

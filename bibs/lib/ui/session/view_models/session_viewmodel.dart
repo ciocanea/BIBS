@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import '../../../data/models/user_profile_model.dart';
+import '../../../data/models/user_profile/user_profile_model.dart';
 import '../../../data/repositories/auth_repository.dart';
 import '../../../data/repositories/user/user_repository.dart';
 import '../../../utils/result.dart';

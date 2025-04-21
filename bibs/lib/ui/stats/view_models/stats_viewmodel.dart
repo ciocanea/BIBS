@@ -1,21 +1,29 @@
 import 'package:flutter/material.dart';
 
-import '../../../data/models/user_profile_model.dart';
+import '../../../data/models/user_profile/user_profile_model.dart';
+import '../../../data/models/user_time/user_time_model.dart';
+import '../../../data/repositories/leaderboard/leaderboard_repository.dart';
 import '../../../data/repositories/user/user_repository.dart';
 import '../../../utils/result.dart';
 
 class StatsViewModel extends ChangeNotifier{
   StatsViewModel({
     required UserRepository userRepository,
-  }) : _userRepository = userRepository;
+    required LeaderboardRepository leaderboardRepository,
+  }) : _userRepository = userRepository,
+       _leaderboardRepository = leaderboardRepository;
 
   final UserRepository _userRepository;
+  final LeaderboardRepository _leaderboardRepository;
 
   UserProfile? _userProfile;
   UserProfile? get userProfile => _userProfile;
 
   int? _userTime;
   int? get userTime => _userTime;
+
+  List<UserTime>? _leaderboard;
+  List<UserTime>? get leaderboard => _leaderboard;
 
   Future<Result<void>> load() async {
     try {
@@ -31,9 +39,17 @@ class StatsViewModel extends ChangeNotifier{
       switch (userTimeResult) {
         case Ok<int>():
           _userTime = userTimeResult.value;
-          return Result.ok(null);
         case Error<int>():
           return Result.error(userTimeResult.error);
+      }
+
+      final leaderboardResult = await _leaderboardRepository.getLeaderboard(campus: _userProfile!.campus ?? '');
+      switch (leaderboardResult) {
+        case Ok<List<UserTime>>():
+          _leaderboard = leaderboardResult.value;
+          return Result.ok(null);
+        case Error<List<UserTime>>():
+          return Result.error(leaderboardResult.error);
       }
     } 
     finally {
