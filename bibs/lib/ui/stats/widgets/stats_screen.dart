@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../utils/result.dart';
 import '../view_models/stats_viewmodel.dart';
+import 'leaderboard.dart';
 
 
 class StatsScreen extends StatefulWidget {
@@ -40,6 +41,7 @@ class _StatsScreenState extends State<StatsScreen> {
             builder:(context, _) {
               final userProfile = widget.viewModel.userProfile;
               final userTime = widget.viewModel.userTime;
+              final leaderboard = widget.viewModel.leaderboard;
 
               if(userProfile == null || userTime == null) {
                 return const CircularProgressIndicator();
@@ -48,10 +50,10 @@ class _StatsScreenState extends State<StatsScreen> {
               return Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(userProfile.id),
                   Text(userProfile.username),
-                  Text(userProfile.campus ?? 'null'),
-                  Text(widget.viewModel.formattedUserTime)
+                  Text(userProfile.campus!),
+                  Text(widget.viewModel.formattedUserTime),
+                  MyLeaderboard(leaderboardDataSource: leaderboard!, userId: userProfile.id)
                 ],
               );
             }

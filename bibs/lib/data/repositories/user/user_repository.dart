@@ -1,5 +1,4 @@
-
-import '../../models/user_profile_model.dart';
+import '../../models/user_profile/user_profile_model.dart';
 import '../../../utils/result.dart';
 
 abstract class UserRepository {

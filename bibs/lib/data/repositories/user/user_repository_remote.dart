@@ -1,12 +1,11 @@
-
-import 'package:bibs/data/services/responses.dart/time_response.dart';
 import 'package:logging/logging.dart';
 
 import '../../../utils/result.dart';
-import '../../models/user_profile_model.dart';
+import '../../models/user_profile/user_profile_model.dart';
 import '../../services/api/user_api.dart';
 import '../../services/local/shared_prefrences_service.dart';
 import '../../services/responses.dart/profile_response.dart';
+import '../../services/responses.dart/time_response.dart';
 import 'user_repository.dart';
 
 class UserRepositoryRemote extends UserRepository {
