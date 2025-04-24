@@ -13,6 +13,8 @@ import '../ui/session/widgets/session_screen.dart';
 import '../ui/session/view_models/session_viewmodel.dart';
 import '../ui/stats/view_models/stats_viewmodel.dart';
 import '../ui/stats/widgets/stats_screen.dart';
+import '../ui/study_log/view_models/study_log_viewmodel.dart';
+import '../ui/study_log/widgets/study_log_screen.dart';
 import 'routes.dart';
 
 GoRouter router () => GoRouter(
@@ -33,6 +35,18 @@ GoRouter router () => GoRouter(
               viewModel: SessionViewModel(
                 authRepository: context.read(),
                 userRepository: context.read(),
+                studySessionRepository: context.read(),
+              )
+            );
+          },
+        ),
+        GoRoute(
+          path: Routes.studyLog,
+          builder: (context, state) {
+            return StudyLogScreen(
+              viewModel: StudyLogViewModel(
+                userRepository: context.read(),
+                studySessionRepository: context.read(),
               )
             );
           },
