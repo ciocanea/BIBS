@@ -16,6 +16,7 @@ class MyNavigationBar extends StatelessWidget {
 
   static final tabs = [
     Routes.session,
+    Routes.studyLog,
     Routes.stats,
   ];
 
@@ -31,6 +32,7 @@ class MyNavigationBar extends StatelessWidget {
         onTap: (idx) => context.go(tabs[idx]),
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.timer), label: 'Session'),
+          BottomNavigationBarItem(icon: Icon(Icons.paste), label: 'Study Log'),
           BottomNavigationBarItem(icon: Icon(Icons.bar_chart), label: 'Stats'),
         ],
       ),

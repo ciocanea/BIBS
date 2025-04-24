@@ -14,7 +14,7 @@ class LeaderboardRepositoryRemote extends LeaderboardRepository {
 
   final LeaderboardClient _leaderboardClient;
 
-  final _log = Logger('UserRepositoryRemote');
+  final _log = Logger('LeaderboardRepositoryRemote');
 
   @override
   Future<Result<List<UserTime>>> getLeaderboard ({required String campus}) async {
@@ -26,10 +26,8 @@ class LeaderboardRepositoryRemote extends LeaderboardRepository {
 
         return Result.ok(result.value.map((userTime) => UserTime.fromJson(userTime.time)).toList());
       case Error<List<UserTimeResponse>>():
-        _log.severe('Failed to get: ${result.error}.');
+        _log.severe('Failed to get user time: ${result.error}.');
         return Result.error(result.error);
     }
   }
-
-
 }

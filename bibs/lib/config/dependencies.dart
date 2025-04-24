@@ -5,10 +5,13 @@ import '../data/repositories/auth_repository.dart';
 import '../data/repositories/auth_repository_remote.dart';
 import '../data/repositories/leaderboard/leaderboard_repository.dart';
 import '../data/repositories/leaderboard/leaderboard_repository_remote.dart';
+import '../data/repositories/session/study_session_repository.dart';
+import '../data/repositories/session/study_session_repository_remote.dart';
 import '../data/repositories/user/user_repository.dart';
 import '../data/repositories/user/user_repository_remote.dart';
 import '../data/services/api/auth_api.dart';
 import '../data/services/api/leaderboard_api.dart';
+import '../data/services/api/study_session_api.dart';
 import '../data/services/api/user_api.dart';
 import '../data/services/local/shared_prefrences_service.dart';
 
@@ -17,6 +20,7 @@ List<SingleChildWidget> get providers {
     Provider(create: (context) => AuthClient()),
     Provider(create: (context) => UserClient()),
     Provider(create: (context) => LeaderboardClient()),
+    Provider(create: (context) => StudySessionClient()),
     Provider(create: (context) => SharedPreferencesService()),
     ChangeNotifierProvider(
       create: (context) => 
@@ -40,6 +44,12 @@ List<SingleChildWidget> get providers {
         LeaderboardRepositoryRemote(
           leaderboardClient: context.read(),
         ) as LeaderboardRepository
+    ),
+    Provider(
+      create: (context) => 
+        StudySessionRepositoryRemote(
+          studySessionClient: context.read(),
+        ) as StudySessionRepository
     ),
   ];
 }
