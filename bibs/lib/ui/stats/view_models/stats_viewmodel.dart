@@ -21,7 +21,7 @@ class StatsViewModel extends ChangeNotifier{
   UserProfile? get userProfile => _userProfile;
 
   int? _userTotalTime;
-  int? get userTime => _userTotalTime;
+  int? get userTotalTime => _userTotalTime;
 
   List<UserTime>? _leaderboard;
   List<UserTime>? get leaderboard => _leaderboard;
@@ -39,7 +39,7 @@ class StatsViewModel extends ChangeNotifier{
       final userTimeResult = await _userRepository.getTotalTime();
       switch (userTimeResult) {
         case Ok<int>():
-          _userTime = userTimeResult.value;
+          _userTotalTime = userTimeResult.value;
         case Error<int>():
           return Result.error(userTimeResult.error);
       }
@@ -59,9 +59,9 @@ class StatsViewModel extends ChangeNotifier{
   }
 
   String get formattedUserTime {
-    if (_userTime == null) return '';
+    if (_userTotalTime == null) return '';
 
-    final duration = Duration(milliseconds: _userTime!);
+    final duration = Duration(milliseconds: _userTotalTime!);
 
     final days = duration.inDays;
     final hours = duration.inHours % 24;

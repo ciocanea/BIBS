@@ -37,7 +37,7 @@ class _StatsScreenState extends State<StatsScreen> {
             listenable: widget.viewModel,
             builder:(context, _) {
               final userProfile = widget.viewModel.userProfile;
-              final userTime = widget.viewModel.userTime;
+              final userTime = widget.viewModel.userTotalTime;
               final leaderboard = widget.viewModel.leaderboard;
 
               if(userProfile == null || userTime == null) {
