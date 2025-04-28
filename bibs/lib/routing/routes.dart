@@ -4,4 +4,5 @@ abstract final class Routes {
   static const session = '/session';
   static const studyLog = '/studyLog';
   static const stats = '/stats';
+  static const profile = '/profile';
 }
