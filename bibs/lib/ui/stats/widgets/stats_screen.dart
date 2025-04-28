@@ -31,9 +31,6 @@ class _StatsScreenState extends State<StatsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Stats'),
-      ),
       body: SafeArea(
         child: Center(
           child: ListenableBuilder(

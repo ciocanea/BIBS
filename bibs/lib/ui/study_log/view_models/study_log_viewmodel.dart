@@ -1,4 +1,3 @@
-import 'package:bibs/data/services/responses.dart/time_response.dart';
 import 'package:flutter/material.dart';
 
 import '../../../data/models/study_session/study_session_model.dart';

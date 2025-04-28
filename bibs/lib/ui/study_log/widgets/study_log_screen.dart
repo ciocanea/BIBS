@@ -29,9 +29,6 @@ class _StudyLogScreenState extends State<StudyLogScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Study Log'),
-      ),
       body: SafeArea(
         child: Center(
           child: ListenableBuilder(

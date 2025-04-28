@@ -16,7 +16,6 @@ class SessionScreen extends StatefulWidget {
 }
 
 class _SessionScreenState extends State<SessionScreen> {
-
   @override
   void initState() {
     super.initState();
@@ -43,22 +42,11 @@ class _SessionScreenState extends State<SessionScreen> {
         title: Text('Session'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.exit_to_app),
-            tooltip: 'Sign Out',
-            onPressed: () async {
-              final result = await widget.viewModel.signOut();
-
-              if(result is Error<void>) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('${result.error}')
-                  )
-                );
-                return;
-              }
-
-              context.go(Routes.signIn);
-            },
+            icon: const Icon(Icons.person),
+            tooltip: 'Profile',
+            onPressed: () {
+              context.go(Routes.profile);
+            }
           ),
         ],
       ),

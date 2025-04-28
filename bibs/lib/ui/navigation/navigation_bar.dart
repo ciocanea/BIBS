@@ -25,6 +25,7 @@ class MyNavigationBar extends StatelessWidget {
     final index = tabs.indexWhere((path) => currentLocation.startsWith(path));
     final currentIndex = index < 0 ? 0 : index;
 
+
     return Scaffold(
       body: child,
       bottomNavigationBar: BottomNavigationBar(
