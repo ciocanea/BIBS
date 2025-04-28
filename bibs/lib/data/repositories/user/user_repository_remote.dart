@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:logging/logging.dart';
 
 import '../../../utils/result.dart';
@@ -61,6 +63,36 @@ class UserRepositoryRemote extends UserRepository {
   }
 
   @override
+  Future<Result<UserProfile>> setUsername ({required String newUsername}) async {
+    String? id;
+    if(_userProfile != null) {
+      id = _userProfile!.id;
+    }
+    else {
+      final fetchResult = await _fetchUser();
+      switch (fetchResult) {
+        case Ok<UserProfile>():
+          id = fetchResult.value.id;
+        case Error<UserProfile>():
+          return Result.error(fetchResult.error);
+      }
+    }
+
+    final userResult = await _userClient.setUsername(id, newUsername);
+    switch (userResult) {
+      case Ok<UserProfileResponse>():
+        final userProfile = UserProfile.fromJson(userResult.value.profile);
+        _userProfile = userProfile;
+
+        _log.info('Username successfully updated.');
+        return Result.ok(userProfile);
+      case Error<UserProfileResponse>():
+        _log.severe('Failed to update username: ${userResult.error}.');
+        return Result.error(userResult.error);
+    }
+  }
+
+  @override
   Future<Result<UserProfile>> setUserCampus ({required String newCampus}) async {
     String? id;
     if(_userProfile != null) {
@@ -87,6 +119,59 @@ class UserRepositoryRemote extends UserRepository {
       case Error<UserProfileResponse>():
         _log.severe('Failed to update user campus: ${userResult.error}.');
         return Result.error(userResult.error);
+    }
+  }
+
+  @override
+  Future<Result<UserProfile>> uploadImage ({required File imageFile}) async{
+    String? id;
+    if(_userProfile != null) {
+      id = _userProfile!.id;
+    }
+    else {
+      final fetchResult = await _fetchUser();
+      switch (fetchResult) {
+        case Ok<UserProfile>():
+          id = fetchResult.value.id;
+        case Error<UserProfile>():
+          return Result.error(fetchResult.error);
+      }
+    }
+
+    final imagePath = '/$id/profile';
+
+    final uploadImageResult = await _userClient.uploadImage(imageFile, imagePath);
+
+    switch (uploadImageResult) {
+      case Ok<String>():
+        _log.info('Image succesfully uploaded.');
+      case Error<String>():
+        _log.severe('Failed to upload image: ${uploadImageResult.error}');
+        return Result.error(uploadImageResult.error);
+    }
+
+    final getPubliUrlResult = await _userClient.getPublicUrl(imagePath);
+    switch (getPubliUrlResult) {
+      case Ok<String>():
+        _log.info('Public image URL succesfully retreived.');
+      case Error<String>():
+        return Result.error(getPubliUrlResult.error);
+    }
+
+    final publicUrl = Uri.parse(getPubliUrlResult.value).replace(queryParameters: {'t': DateTime.now().millisecondsSinceEpoch.toString()}).toString();
+
+    final setImagePathResult = await _userClient.setUserImagePath(id, publicUrl);
+
+    switch (setImagePathResult) {
+      case Ok<UserProfileResponse>():
+        final userProfile = UserProfile.fromJson(setImagePathResult.value.profile);
+        _userProfile = userProfile;
+
+        _log.info('User image path succesfully changed.');
+        return Result.ok(userProfile);
+      case Error<UserProfileResponse>():
+        _log.severe('Failed to change user image path: ${setImagePathResult.error}');
+        return Result.error(setImagePathResult.error);
     }
   }
 
