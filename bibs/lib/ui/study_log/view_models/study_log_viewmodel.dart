@@ -24,7 +24,7 @@ class StudyLogViewModel extends ChangeNotifier{
 
   Future<Result<void>> load() async {
     try {
-      final userProfileResult = await _userRepository.getUserProfile();
+      final userProfileResult = await _userRepository.getProfile();
       switch (userProfileResult) {
         case Ok<UserProfile>():
           _userProfile = userProfileResult.value;
@@ -32,7 +32,7 @@ class StudyLogViewModel extends ChangeNotifier{
           return Result.error(userProfileResult.error);
       }
 
-      final studySessionResult = await _studySessionRepository.getStudySession(userId: _userProfile!.id, campus: _userProfile!.campus!);
+      final studySessionResult = await _studySessionRepository.getStudySessions(userId: _userProfile!.userId, campus: _userProfile!.campus!);
       switch (studySessionResult) {
         case Ok<List<StudySession>>():
           _studySessions = studySessionResult.value;
@@ -48,13 +48,13 @@ class StudyLogViewModel extends ChangeNotifier{
 
   Future<Result<void>> deleteStudySession (StudySession studySession) async {
     try {
-      final userTimeResult = await _userRepository.setUserTime(time: (-1) * studySession.time);
+      final userTimeResult = await _userRepository.updateTotalTime(duration: (-1) * studySession.duration);
       
       if (userTimeResult is Error) {
         return userTimeResult;
       }
 
-      final studySessionResult = await _studySessionRepository.deleteStudySession(studySessionId: studySession.id);
+      final studySessionResult = await _studySessionRepository.deleteStudySession(studySessionId: studySession.sessionId);
 
       if (studySessionResult is Error) {
         return studySessionResult;

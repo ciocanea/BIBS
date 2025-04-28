@@ -9,6 +9,7 @@ import '../../../data/repositories/user/user_repository.dart';
 import '../../../utils/result.dart';
 
 class ProfileViewmodel extends ChangeNotifier{
+
   ProfileViewmodel({
     required UserRepository userRepository,
   }) : _userRepository = userRepository;
@@ -23,7 +24,7 @@ class ProfileViewmodel extends ChangeNotifier{
 
   Future<Result<void>> load() async {
     try {
-      final userProfileResult = await _userRepository.getUserProfile();
+      final userProfileResult = await _userRepository.getProfile();
 
       switch (userProfileResult) {
         case Ok<UserProfile>():
@@ -57,7 +58,7 @@ class ProfileViewmodel extends ChangeNotifier{
 
   Future<Result<void>> changeCampus (String newCampus) async {
     try {
-      final userProfileResult = await _userRepository.setUserCampus(newCampus: newCampus);
+      final userProfileResult = await _userRepository.setCampus(newCampus: newCampus);
 
       switch (userProfileResult) {
         case Ok<UserProfile>():
@@ -103,7 +104,7 @@ class ProfileViewmodel extends ChangeNotifier{
     }
   }
 
-  Future<Result<void>> uploadImage() async {
+  Future<Result<void>> changeImage() async {
     try {
       if (_imageFile == null) {
         return Result.error(Exception('Please select an image.'));

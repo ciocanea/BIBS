@@ -50,7 +50,7 @@ class _StatsScreenState extends State<StatsScreen> {
                   Text(userProfile.username),
                   Text(userProfile.campus!),
                   Text(widget.viewModel.formattedUserTime),
-                  MyLeaderboard(leaderboardDataSource: leaderboard!, userId: userProfile.id)
+                  MyLeaderboard(leaderboardDataSource: leaderboard!, userId: userProfile.userId)
                 ],
               );
             }

@@ -5,15 +5,15 @@ import '../../../utils/result.dart';
 
 abstract class UserRepository {
 
-  Future<Result<UserProfile>> getUserProfile ();
+  Future<Result<UserProfile>> getProfile ();
 
   Future<Result<UserProfile>> setUsername ({required String newUsername});
   
-  Future<Result<UserProfile>> setUserCampus ({required String newCampus});
+  Future<Result<UserProfile>> setCampus ({required String newCampus});
 
   Future<Result<UserProfile>> uploadImage ({required File imageFile});
 
-  Future<Result<int>> getUserTime ();
+  Future<Result<int>> getTotalTime ();
 
-  Future<Result<void>> setUserTime ({required int time});
+  Future<Result<void>> updateTotalTime ({required int duration});
 }

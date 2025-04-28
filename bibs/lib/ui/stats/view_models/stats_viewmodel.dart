@@ -7,6 +7,7 @@ import '../../../data/repositories/user/user_repository.dart';
 import '../../../utils/result.dart';
 
 class StatsViewModel extends ChangeNotifier{
+
   StatsViewModel({
     required UserRepository userRepository,
     required LeaderboardRepository leaderboardRepository,
@@ -19,15 +20,15 @@ class StatsViewModel extends ChangeNotifier{
   UserProfile? _userProfile;
   UserProfile? get userProfile => _userProfile;
 
-  int? _userTime;
-  int? get userTime => _userTime;
+  int? _userTotalTime;
+  int? get userTime => _userTotalTime;
 
   List<UserTime>? _leaderboard;
   List<UserTime>? get leaderboard => _leaderboard;
 
   Future<Result<void>> load() async {
     try {
-      final userProfileResult = await _userRepository.getUserProfile();
+      final userProfileResult = await _userRepository.getProfile();
       switch (userProfileResult) {
         case Ok<UserProfile>():
           _userProfile = userProfileResult.value;
@@ -35,7 +36,7 @@ class StatsViewModel extends ChangeNotifier{
           return Result.error(userProfileResult.error);
       }
 
-      final userTimeResult = await _userRepository.getUserTime();
+      final userTimeResult = await _userRepository.getTotalTime();
       switch (userTimeResult) {
         case Ok<int>():
           _userTime = userTimeResult.value;
@@ -43,7 +44,7 @@ class StatsViewModel extends ChangeNotifier{
           return Result.error(userTimeResult.error);
       }
 
-      final leaderboardResult = await _leaderboardRepository.getLeaderboard(campus: _userProfile!.campus ?? '');
+      final leaderboardResult = await _leaderboardRepository.getLeaderboardEntries(campus: _userProfile!.campus ?? '');
       switch (leaderboardResult) {
         case Ok<List<UserTime>>():
           _leaderboard = leaderboardResult.value;

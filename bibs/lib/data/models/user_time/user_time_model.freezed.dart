@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$UserTime {
 
- String get id; String get campus; String get username; int get time;
+@JsonKey(name: 'id') String get userId; String get campus; String get username;@JsonKey(name: 'total_time') int get totalTime;
 /// Create a copy of UserTime
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -29,16 +29,16 @@ $UserTimeCopyWith<UserTime> get copyWith => _$UserTimeCopyWithImpl<UserTime>(thi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserTime&&(identical(other.id, id) || other.id == id)&&(identical(other.campus, campus) || other.campus == campus)&&(identical(other.username, username) || other.username == username)&&(identical(other.time, time) || other.time == time));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserTime&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.campus, campus) || other.campus == campus)&&(identical(other.username, username) || other.username == username)&&(identical(other.totalTime, totalTime) || other.totalTime == totalTime));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,campus,username,time);
+int get hashCode => Object.hash(runtimeType,userId,campus,username,totalTime);
 
 @override
 String toString() {
-  return 'UserTime(id: $id, campus: $campus, username: $username, time: $time)';
+  return 'UserTime(userId: $userId, campus: $campus, username: $username, totalTime: $totalTime)';
 }
 
 
@@ -49,7 +49,7 @@ abstract mixin class $UserTimeCopyWith<$Res>  {
   factory $UserTimeCopyWith(UserTime value, $Res Function(UserTime) _then) = _$UserTimeCopyWithImpl;
 @useResult
 $Res call({
- String id, String campus, String username, int time
+@JsonKey(name: 'id') String userId, String campus, String username,@JsonKey(name: 'total_time') int totalTime
 });
 
 
@@ -66,12 +66,12 @@ class _$UserTimeCopyWithImpl<$Res>
 
 /// Create a copy of UserTime
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? campus = null,Object? username = null,Object? time = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? userId = null,Object? campus = null,Object? username = null,Object? totalTime = null,}) {
   return _then(_self.copyWith(
-id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as String,campus: null == campus ? _self.campus : campus // ignore: cast_nullable_to_non_nullable
 as String,username: null == username ? _self.username : username // ignore: cast_nullable_to_non_nullable
-as String,time: null == time ? _self.time : time // ignore: cast_nullable_to_non_nullable
+as String,totalTime: null == totalTime ? _self.totalTime : totalTime // ignore: cast_nullable_to_non_nullable
 as int,
   ));
 }
@@ -83,13 +83,13 @@ as int,
 @JsonSerializable()
 
 class _UserTime implements UserTime {
-  const _UserTime({required this.id, required this.campus, required this.username, required this.time});
+  const _UserTime({@JsonKey(name: 'id') required this.userId, required this.campus, required this.username, @JsonKey(name: 'total_time') required this.totalTime});
   factory _UserTime.fromJson(Map<String, dynamic> json) => _$UserTimeFromJson(json);
 
-@override final  String id;
+@override@JsonKey(name: 'id') final  String userId;
 @override final  String campus;
 @override final  String username;
-@override final  int time;
+@override@JsonKey(name: 'total_time') final  int totalTime;
 
 /// Create a copy of UserTime
 /// with the given fields replaced by the non-null parameter values.
@@ -104,16 +104,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserTime&&(identical(other.id, id) || other.id == id)&&(identical(other.campus, campus) || other.campus == campus)&&(identical(other.username, username) || other.username == username)&&(identical(other.time, time) || other.time == time));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserTime&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.campus, campus) || other.campus == campus)&&(identical(other.username, username) || other.username == username)&&(identical(other.totalTime, totalTime) || other.totalTime == totalTime));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,campus,username,time);
+int get hashCode => Object.hash(runtimeType,userId,campus,username,totalTime);
 
 @override
 String toString() {
-  return 'UserTime(id: $id, campus: $campus, username: $username, time: $time)';
+  return 'UserTime(userId: $userId, campus: $campus, username: $username, totalTime: $totalTime)';
 }
 
 
@@ -124,7 +124,7 @@ abstract mixin class _$UserTimeCopyWith<$Res> implements $UserTimeCopyWith<$Res>
   factory _$UserTimeCopyWith(_UserTime value, $Res Function(_UserTime) _then) = __$UserTimeCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String campus, String username, int time
+@JsonKey(name: 'id') String userId, String campus, String username,@JsonKey(name: 'total_time') int totalTime
 });
 
 
@@ -141,12 +141,12 @@ class __$UserTimeCopyWithImpl<$Res>
 
 /// Create a copy of UserTime
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? campus = null,Object? username = null,Object? time = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? userId = null,Object? campus = null,Object? username = null,Object? totalTime = null,}) {
   return _then(_UserTime(
-id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as String,campus: null == campus ? _self.campus : campus // ignore: cast_nullable_to_non_nullable
 as String,username: null == username ? _self.username : username // ignore: cast_nullable_to_non_nullable
-as String,time: null == time ? _self.time : time // ignore: cast_nullable_to_non_nullable
+as String,totalTime: null == totalTime ? _self.totalTime : totalTime // ignore: cast_nullable_to_non_nullable
 as int,
   ));
 }

@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../../../data/models/user_profile/user_profile_model.dart';
-import '../../../data/repositories/auth_repository.dart';
+import '../../../data/repositories/auth/auth_repository.dart';
 import '../../../data/repositories/session/study_session_repository.dart';
 import '../../../data/repositories/user/user_repository.dart';
 import '../../../utils/result.dart';
@@ -34,7 +34,7 @@ class SessionViewModel extends ChangeNotifier{
 
   Future<Result<void>> load() async {
     try {
-      final result = await _userRepository.getUserProfile();
+      final result = await _userRepository.getProfile();
       switch (result) {
         case Ok<UserProfile>():
           _userProfile = result.value;
@@ -50,7 +50,7 @@ class SessionViewModel extends ChangeNotifier{
 
   Future<Result<void>> setUserCampus(String newCampus) async {
     try {
-      final result = await _userRepository.setUserCampus(newCampus: newCampus);
+      final result = await _userRepository.setCampus(newCampus: newCampus);
       switch (result) {
         case Ok<UserProfile>():
           _userProfile = result.value;
@@ -89,16 +89,16 @@ class SessionViewModel extends ChangeNotifier{
     try {
     _stopwatch.stop();
 
-    final timeResult = await _userRepository.setUserTime(time: _stopwatch.elapsedMilliseconds);
+    final timeResult = await _userRepository.updateTotalTime(duration: _stopwatch.elapsedMilliseconds);
     
     if (timeResult is Error) {
       return timeResult;
     }
 
     final sessionResult = await _studySessionRepository.createStudySession(
-      userId: _userProfile!.id,
+      userId: _userProfile!.userId,
       campus: _userProfile!.campus!,
-      time: _stopwatch.elapsedMilliseconds,
+      duration: _stopwatch.elapsedMilliseconds,
     );
 
     _stopwatch.reset();

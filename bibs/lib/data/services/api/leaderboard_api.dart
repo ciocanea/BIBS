@@ -8,7 +8,11 @@ class LeaderboardClient {
 
   Future<Result<List<UserTimeResponse>>> getLeaderboardEntries (String campus) async {
     try {
-      final response = await _supabaseClient.from('times').select().eq('campus', campus).order('time', ascending: false);
+      final response = await _supabaseClient
+      .from('times')
+      .select()
+      .eq('campus', campus)
+      .order('total_time', ascending: false);
 
       return Result.ok(response.map((userTime) => UserTimeResponse(time: userTime)).toList());
     }

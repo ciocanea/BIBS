@@ -14,7 +14,7 @@ class LeaderboardDataSource extends DataTableSource {
     if (index >= userTimes.length) return null;
     final userTime = userTimes[index];
 
-    final isUserRow = userTime.id == userId;
+    final isUserRow = userTime.userId == userId;
     return DataRow.byIndex(
       index: index,
       color: isUserRow
@@ -23,7 +23,7 @@ class LeaderboardDataSource extends DataTableSource {
       cells: [
         DataCell(Text('${index + 1}')),
         DataCell(Text(userTime.username)),
-        DataCell(Text(formattedUserTime(userTime.time))),
+        DataCell(Text(formattedUserTime(userTime.totalTime))),
       ],
     );
   }

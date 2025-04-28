@@ -64,7 +64,7 @@ class _SessionScreenState extends State<SessionScreen> {
               return Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(userProfile.id),
+                  Text(userProfile.userId),
                   Text(userProfile.username),
                   Text(userProfile.campus ?? 'null'),
                   CupertinoButton(

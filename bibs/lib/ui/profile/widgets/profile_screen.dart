@@ -84,7 +84,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       child: const Text('Pick Profile'),
                     ),
                     ElevatedButton(
-                      onPressed: widget.viewModel.uploadImage,
+                      onPressed: widget.viewModel.changeImage,
                       child: const Text('Update Profile'),
                     ),
                     TextFormField(

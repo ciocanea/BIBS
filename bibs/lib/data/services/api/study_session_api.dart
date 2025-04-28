@@ -7,9 +7,18 @@ import '../responses.dart/study_session_response.dart';
 class StudySessionClient {
   final SupabaseClient _supabaseClient = Supabase.instance.client;
 
-  Future<Result<StudySessionResponse>> createStudySession (String userId, String campus, int time, DateTime startedAt) async {
+  Future<Result<StudySessionResponse>> createStudySession (String userId, String campus, int duration, DateTime startedAt) async {
     try {
-      final response = await _supabaseClient.from('sessions').insert({'user_id': userId, 'campus': campus, 'time': time, 'started_at': startedAt.toIso8601String()}).select().single();
+      final response = await _supabaseClient
+      .from('sessions')
+      .insert({
+        'user_id': userId,
+        'campus': campus,
+        'duration': duration,
+        'started_at': startedAt.toIso8601String()
+      })
+      .select()
+      .single();
 
       return Result.ok(StudySessionResponse(session: response));
     }
@@ -20,7 +29,12 @@ class StudySessionClient {
 
   Future<Result<List<StudySessionResponse>>> getStudySession (String userId, String campus) async {
     try {
-      final response = await _supabaseClient.from('sessions').select().eq('user_id', userId).eq('campus', campus).order('started_at', ascending: false);
+      final response = await _supabaseClient
+      .from('sessions')
+      .select()
+      .eq('user_id', userId)
+      .eq('campus', campus)
+      .order('started_at', ascending: false);
 
       return Result.ok(response.map((studySession) => StudySessionResponse(session: studySession)).toList());
     }
@@ -31,7 +45,10 @@ class StudySessionClient {
 
   Future<Result<void>> deleteStudySession (String studySessionId) async {
     try {
-      await _supabaseClient.from('sessions').delete().eq('id', studySessionId);
+      await _supabaseClient
+      .from('sessions')
+      .delete()
+      .eq('id', studySessionId);
 
       return Result.ok(null);
     }

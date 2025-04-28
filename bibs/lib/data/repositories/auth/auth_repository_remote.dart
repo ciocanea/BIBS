@@ -2,10 +2,10 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:logging/logging.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import '../services/local/shared_prefrences_service.dart';
+import '../../services/local/shared_prefrences_service.dart';
 import 'auth_repository.dart';
-import '../../utils/result.dart';
-import '../services/api/auth_api.dart';
+import '../../../utils/result.dart';
+import '../../services/api/auth_api.dart';
 
 class AuthRepositoryRemote extends AuthRepository {
   AuthRepositoryRemote({

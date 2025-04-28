@@ -11,6 +11,7 @@ import '../../services/responses.dart/time_response.dart';
 import 'user_repository.dart';
 
 class UserRepositoryRemote extends UserRepository {
+
   UserRepositoryRemote ({
     required UserClient userClient,
     required SharedPreferencesService sharedPreferencesService,
@@ -24,36 +25,37 @@ class UserRepositoryRemote extends UserRepository {
 
   UserProfile? _userProfile;
 
-  Future<Result<UserProfile>> _fetchUser() async {
-    final sharedPrefResult = await _sharedPreferencesService.fetchUserId();
-    switch (sharedPrefResult) {
+  Future<Result<UserProfile>> _fetchUser () async {
+    final sharedPreferencesResult = await _sharedPreferencesService.fetchUserId();
+    switch (sharedPreferencesResult) {
       case Ok<String?>():
-        String? id = sharedPrefResult.value;
+        String? userId = sharedPreferencesResult.value;
         
-        if(id == null) {
+        if(userId == null) {
           _log.severe('User id is null.');
           return Result.error(Exception('User id is null.'));
         }
 
-        final userResult = await _userClient.getUserProfile(id);
-        switch (userResult) {
+        final getProfileResult = await _userClient.getProfile(userId);
+        switch (getProfileResult) {
           case Ok<UserProfileResponse>():
-            final userProfile = UserProfile.fromJson(userResult.value.profile);
+            final userProfile = UserProfile.fromJson(getProfileResult.value.profile);
             _userProfile = userProfile;
-            _log.info('User profile successfully fetched and cached.');
+
+            _log.info('User profile fetched and cached successfully.');
             return Result.ok(userProfile);
           case Error<UserProfileResponse>():
-            _log.severe('Failed to fetch user profile: ${userResult.error}');
-            return Result.error(userResult.error);
+            _log.severe('Failed to fetch user profile: ${getProfileResult.error}');
+            return Result.error(getProfileResult.error);
         }
       case Error<String?>():
-        _log.severe('Failed to fetch user ID: ${sharedPrefResult.error}');
-        return Result.error(sharedPrefResult.error);
+        _log.severe('Failed to fetch user ID: ${sharedPreferencesResult.error}');
+        return Result.error(sharedPreferencesResult.error);
     }
   }
 
   @override
-  Future<Result<UserProfile>> getUserProfile () async {
+  Future<Result<UserProfile>> getProfile () async {
     if(_userProfile != null) {
       _log.info('User profile already loaded in memory. Returning cached profile.');
       return Future.value(Result.ok(_userProfile!));
@@ -64,87 +66,87 @@ class UserRepositoryRemote extends UserRepository {
 
   @override
   Future<Result<UserProfile>> setUsername ({required String newUsername}) async {
-    String? id;
+    String? userId;
     if(_userProfile != null) {
-      id = _userProfile!.id;
+      userId = _userProfile!.userId;
     }
     else {
-      final fetchResult = await _fetchUser();
-      switch (fetchResult) {
+      final fetchUserResult = await _fetchUser();
+      switch (fetchUserResult) {
         case Ok<UserProfile>():
-          id = fetchResult.value.id;
+          userId = fetchUserResult.value.userId;
         case Error<UserProfile>():
-          return Result.error(fetchResult.error);
+          return Result.error(fetchUserResult.error);
       }
     }
 
-    final userResult = await _userClient.setUsername(id, newUsername);
-    switch (userResult) {
+    final setUsernameResult = await _userClient.setUsername(userId, newUsername);
+    switch (setUsernameResult) {
       case Ok<UserProfileResponse>():
-        final userProfile = UserProfile.fromJson(userResult.value.profile);
+        final userProfile = UserProfile.fromJson(setUsernameResult.value.profile);
         _userProfile = userProfile;
 
-        _log.info('Username successfully updated.');
+        _log.info('Username updated successfully.');
         return Result.ok(userProfile);
       case Error<UserProfileResponse>():
-        _log.severe('Failed to update username: ${userResult.error}.');
-        return Result.error(userResult.error);
+        _log.severe('Failed to update username: ${setUsernameResult.error}.');
+        return Result.error(setUsernameResult.error);
     }
   }
 
   @override
-  Future<Result<UserProfile>> setUserCampus ({required String newCampus}) async {
-    String? id;
+  Future<Result<UserProfile>> setCampus ({required String newCampus}) async {
+    String? userId;
     if(_userProfile != null) {
-      id = _userProfile!.id;
+      userId = _userProfile!.userId;
     }
     else {
-      final fetchResult = await _fetchUser();
-      switch (fetchResult) {
+      final fetchUserResult = await _fetchUser();
+      switch (fetchUserResult) {
         case Ok<UserProfile>():
-          id = fetchResult.value.id;
+          userId = fetchUserResult.value.userId;
         case Error<UserProfile>():
-          return Result.error(fetchResult.error);
+          return Result.error(fetchUserResult.error);
       }
     }
 
-    final userResult = await _userClient.setUserCampus(id, newCampus);
-    switch (userResult) {
+    final setCampusResult = await _userClient.setCampus(userId, newCampus);
+    switch (setCampusResult) {
       case Ok<UserProfileResponse>():
-        final userProfile = UserProfile.fromJson(userResult.value.profile);
+        final userProfile = UserProfile.fromJson(setCampusResult.value.profile);
         _userProfile = userProfile;
 
-        _log.info('User campus successfully updated.');
+        _log.info('Campus updated successfully.');
         return Result.ok(userProfile);
       case Error<UserProfileResponse>():
-        _log.severe('Failed to update user campus: ${userResult.error}.');
-        return Result.error(userResult.error);
+        _log.severe('Failed to update campus: ${setCampusResult.error}.');
+        return Result.error(setCampusResult.error);
     }
   }
 
   @override
   Future<Result<UserProfile>> uploadImage ({required File imageFile}) async{
-    String? id;
+    String? userId;
     if(_userProfile != null) {
-      id = _userProfile!.id;
+      userId = _userProfile!.userId;
     }
     else {
       final fetchResult = await _fetchUser();
       switch (fetchResult) {
         case Ok<UserProfile>():
-          id = fetchResult.value.id;
+          userId = fetchResult.value.userId;
         case Error<UserProfile>():
           return Result.error(fetchResult.error);
       }
     }
 
-    final imagePath = '/$id/profile';
+    final imagePath = '/$userId/profile';
 
     final uploadImageResult = await _userClient.uploadImage(imageFile, imagePath);
 
     switch (uploadImageResult) {
       case Ok<String>():
-        _log.info('Image succesfully uploaded.');
+        _log.info('Image uploaded succesfully.');
       case Error<String>():
         _log.severe('Failed to upload image: ${uploadImageResult.error}');
         return Result.error(uploadImageResult.error);
@@ -153,41 +155,42 @@ class UserRepositoryRemote extends UserRepository {
     final getPubliUrlResult = await _userClient.getPublicUrl(imagePath);
     switch (getPubliUrlResult) {
       case Ok<String>():
-        _log.info('Public image URL succesfully retreived.');
+        _log.info('Public image URL retreived succesfully.');
       case Error<String>():
+        _log.severe('Failed to get image URL: ${getPubliUrlResult.error}');
         return Result.error(getPubliUrlResult.error);
     }
 
     final publicUrl = Uri.parse(getPubliUrlResult.value).replace(queryParameters: {'t': DateTime.now().millisecondsSinceEpoch.toString()}).toString();
 
-    final setImagePathResult = await _userClient.setUserImagePath(id, publicUrl);
+    final setImagePathResult = await _userClient.setImagePath(userId, publicUrl);
 
     switch (setImagePathResult) {
       case Ok<UserProfileResponse>():
         final userProfile = UserProfile.fromJson(setImagePathResult.value.profile);
         _userProfile = userProfile;
 
-        _log.info('User image path succesfully changed.');
+        _log.info('User image path changed succesfully.');
         return Result.ok(userProfile);
       case Error<UserProfileResponse>():
-        _log.severe('Failed to change user image path: ${setImagePathResult.error}');
+        _log.severe('Failed to update image path: ${setImagePathResult.error}');
         return Result.error(setImagePathResult.error);
     }
   }
 
   @override
-  Future<Result<int>> getUserTime () async {
-    String? id;
+  Future<Result<int>> getTotalTime () async {
+    String? userId;
     String? campus;
     if(_userProfile != null) {
-      id = _userProfile!.id;
+      userId = _userProfile!.userId;
       campus = _userProfile!.campus;
     }
     else {
       final fetchResult = await _fetchUser();
       switch (fetchResult) {
         case Ok<UserProfile>():
-          id = fetchResult.value.id;
+          userId = fetchResult.value.userId;
           campus = fetchResult.value.campus;
         case Error<UserProfile>():
           return Result.error(fetchResult.error);
@@ -195,32 +198,34 @@ class UserRepositoryRemote extends UserRepository {
     }
 
     if(campus == null) {
-      return Result.error(Exception('User has no campus selected.'));
+      return Result.error(Exception('Failed to get total time: User has not selected a campus.'));
     }
 
-    final getTimeResult = await _userClient.getUserTime(id, campus);
-    switch (getTimeResult) {
+    final getTotalTimeResult = await _userClient.getTotalTime(userId, campus);
+    switch (getTotalTimeResult) {
       case Ok<UserTimeResponse>():
-        return Result.ok(getTimeResult.value.time['time']);
+        _log.info('Total time retreived successfully.');
+
+        return Result.ok(getTotalTimeResult.value.time['total_time']);
       case Error<UserTimeResponse>():
-        _log.severe('Failed to get user time: ${getTimeResult.error}.');
-        return Result.error(getTimeResult.error);
+        _log.severe('Failed to get total time: ${getTotalTimeResult.error}.');
+        return Result.error(getTotalTimeResult.error);
     }
   }
 
   @override
-  Future<Result<void>> setUserTime ({required int time}) async {
-    String? id;
+  Future<Result<void>> updateTotalTime ({required int duration}) async {
+    String? userId;
     String? campus;
     if(_userProfile != null) {
-      id = _userProfile!.id;
+      userId = _userProfile!.userId;
       campus = _userProfile!.campus;
     }
     else {
       final fetchResult = await _fetchUser();
       switch (fetchResult) {
         case Ok<UserProfile>():
-          id = fetchResult.value.id;
+          userId = fetchResult.value.userId;
           campus = fetchResult.value.campus;
         case Error<UserProfile>():
           return Result.error(fetchResult.error);
@@ -228,26 +233,26 @@ class UserRepositoryRemote extends UserRepository {
     }
 
     if(campus == null) {
-      return Result.error(Exception('User has no campus selected.'));
+      return Result.error(Exception('Failed to get total time: User has not selected a campus.'));
     }
 
-    final getTimeResult = await _userClient.getUserTime(id, campus);
-    switch (getTimeResult) {
+    final getTotalTimeResult = await _userClient.getTotalTime(userId, campus);
+    switch (getTotalTimeResult) {
       case Ok<UserTimeResponse>():
-        int newTime = getTimeResult.value.time['time'] + time;
+        int newTotalTime = getTotalTimeResult.value.time['total_time'] + duration;
 
-        final setTimeResult = await _userClient.setUserTime(id, campus, newTime);
-        switch (setTimeResult) {
+        final setTotalTimeResult = await _userClient.setTotalTime(userId, campus, newTotalTime);
+        switch (setTotalTimeResult) {
           case Ok<UserTimeResponse>():
-            _log.info('User time successfully updated.');
+            _log.info('Total time updated successfully.');
             return Result.ok(null);
           case Error<UserTimeResponse>():
-            _log.severe('Failed to update user time: ${setTimeResult.error}.');
-            return Result.error(setTimeResult.error);
+            _log.severe('Failed to update total time: ${setTotalTimeResult.error}.');
+            return Result.error(setTotalTimeResult.error);
         }
       case Error<UserTimeResponse>():
-        _log.severe('Failed to get user time: ${getTimeResult.error}.');
-        return Result.error(getTimeResult.error);
+        _log.severe('Failed to get total time: ${getTotalTimeResult.error}.');
+        return Result.error(getTotalTimeResult.error);
     }
   }
 }
