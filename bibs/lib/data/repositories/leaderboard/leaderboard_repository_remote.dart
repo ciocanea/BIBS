@@ -8,6 +8,7 @@ import '../../services/responses.dart/time_response.dart';
 import 'leaderboard_repository.dart';
 
 class LeaderboardRepositoryRemote extends LeaderboardRepository {
+  
   LeaderboardRepositoryRemote ({
     required LeaderboardClient leaderboardClient,
   }) : _leaderboardClient = leaderboardClient;
@@ -17,17 +18,17 @@ class LeaderboardRepositoryRemote extends LeaderboardRepository {
   final _log = Logger('LeaderboardRepositoryRemote');
 
   @override
-  Future<Result<List<UserTime>>> getLeaderboard ({required String campus}) async {
-    final result = await _leaderboardClient.getLeaderboardEntries(campus);
+  Future<Result<List<UserTime>>> getLeaderboardEntries ({required String campus}) async {
+    final getLeaderboardEntriesResult = await _leaderboardClient.getLeaderboardEntries(campus);
 
-    switch (result) {
+    switch (getLeaderboardEntriesResult) {
       case Ok<List<UserTimeResponse>>():
-        _log.info('User Times successfully retreived for campus $campus.');
+        _log.info('Leaderboard entries retreived succesfully for campus $campus.');
 
-        return Result.ok(result.value.map((userTime) => UserTime.fromJson(userTime.time)).toList());
+        return Result.ok(getLeaderboardEntriesResult.value.map((userTime) => UserTime.fromJson(userTime.time)).toList());
       case Error<List<UserTimeResponse>>():
-        _log.severe('Failed to get user time: ${result.error}.');
-        return Result.error(result.error);
+        _log.severe('Failed to get leaderboard entries: ${getLeaderboardEntriesResult.error}.');
+        return Result.error(getLeaderboardEntriesResult.error);
     }
   }
 }

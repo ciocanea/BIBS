@@ -7,15 +7,15 @@ part of 'user_time_model.dart';
 // **************************************************************************
 
 _UserTime _$UserTimeFromJson(Map<String, dynamic> json) => _UserTime(
-  id: json['id'] as String,
+  userId: json['id'] as String,
   campus: json['campus'] as String,
   username: json['username'] as String,
-  time: (json['time'] as num).toInt(),
+  totalTime: (json['total_time'] as num).toInt(),
 );
 
 Map<String, dynamic> _$UserTimeToJson(_UserTime instance) => <String, dynamic>{
-  'id': instance.id,
+  'id': instance.userId,
   'campus': instance.campus,
   'username': instance.username,
-  'time': instance.time,
+  'total_time': instance.totalTime,
 };

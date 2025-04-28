@@ -6,8 +6,8 @@ part 'study_session_model.g.dart';
 @freezed
 abstract class StudySession with _$StudySession {
   const factory StudySession ({
-    required String id,
-    required int time,
+    @JsonKey(name: 'id') required String sessionId,
+    required int duration,
     @JsonKey(name: 'started_at') required DateTime startedAt,
   }) = _StudySession;
 

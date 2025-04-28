@@ -6,16 +6,17 @@ class SharedPreferencesService {
   static const _tokenKey = 'token';
   static const _userIdKey = 'userId';
 
-  Future<Result<String?>> fetchToken() async {
+  Future<Result<String?>> fetchToken () async {
     try {
       final sharedPreferences = await SharedPreferences.getInstance();
       return Result.ok(sharedPreferences.getString(_tokenKey));
-    } on Exception catch (error) {
+    } 
+    on Exception catch (error) {
       return Result.error(error);
     }
   }
 
-  Future<Result<void>> saveToken(String? token) async {
+  Future<Result<void>> saveToken (String? token) async {
     try {
       final sharedPreferences = await SharedPreferences.getInstance();
       if (token == null) {
@@ -24,16 +25,18 @@ class SharedPreferencesService {
         await sharedPreferences.setString(_tokenKey, token);
       }
       return const Result.ok(null);
-    } on Exception catch (e) {
-      return Result.error(e);
+    } 
+    on Exception catch (error) {
+      return Result.error(error);
     }
   }
 
-  Future<Result<String?>> fetchUserId() async {
+  Future<Result<String?>> fetchUserId () async {
     try {
       final sharedPreferences = await SharedPreferences.getInstance();
       return Result.ok(sharedPreferences.getString(_userIdKey));
-    } on Exception catch (error) {
+    } 
+    on Exception catch (error) {
       return Result.error(error);
     }
   }
@@ -47,7 +50,8 @@ class SharedPreferencesService {
         await sharedPreferences.setString(_userIdKey, userId);
       }
       return const Result.ok(null);
-    } on Exception catch (e) {
+    }
+    on Exception catch (e) {
       return Result.error(e);
     }
   }

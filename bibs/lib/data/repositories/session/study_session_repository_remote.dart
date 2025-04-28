@@ -7,6 +7,7 @@ import '../../services/responses.dart/study_session_response.dart';
 import 'study_session_repository.dart';
 
 class StudySessionRepositoryRemote extends StudySessionRepository {
+
   StudySessionRepositoryRemote ({
     required StudySessionClient studySessionClient,
   }) : _studySessionClient = studySessionClient;
@@ -16,27 +17,28 @@ class StudySessionRepositoryRemote extends StudySessionRepository {
   final _log = Logger('StudySessionRepositoryRemote');
 
   @override
-  Future<Result<void>> createStudySession({required String userId, required String campus, required int time}) async {
-    final startedAt = DateTime.now().subtract(Duration(milliseconds: time));
+  Future<Result<void>> createStudySession ({required String userId, required String campus, required int duration}) async {
+    final startedAt = DateTime.now().subtract(Duration(milliseconds: duration));
 
-    final result = await _studySessionClient.createStudySession(userId, campus, time, startedAt);
+    final result = await _studySessionClient.createStudySession(userId, campus, duration, startedAt);
+
     switch (result) {
       case Ok<StudySessionResponse>():
-        _log.info('User session successfully created.');
+        _log.info('Study session created succesfully.');
         return Result.ok(null);
       case Error<StudySessionResponse>():
-        _log.severe('Failed to create user session: ${result.error}.');
+        _log.severe('Failed to create study session: ${result.error}.');
         return Result.error(result.error);
     }
   }
 
   @override
-  Future<Result<List<StudySession>>> getStudySession({required String userId, required String campus}) async {
+  Future<Result<List<StudySession>>> getStudySessions ({required String userId, required String campus}) async {
     final result = await _studySessionClient.getStudySession(userId, campus);
 
     switch (result) {
       case Ok<List<StudySessionResponse>>():
-        _log.info('Study sessions successfully retreived for campus $campus.');
+        _log.info('Study sessions retreived successfully for campus $campus.');
 
         return Result.ok(result.value.map((studySession) => StudySession.fromJson(studySession.session)).toList());
       case Error<List<StudySessionResponse>>():
@@ -46,12 +48,12 @@ class StudySessionRepositoryRemote extends StudySessionRepository {
   }
   
   @override
-  Future<Result<void>> deleteStudySession({required String studySessionId}) async {
+  Future<Result<void>> deleteStudySession ({required String studySessionId}) async {
     final result = await _studySessionClient.deleteStudySession(studySessionId);
 
     switch (result) {
       case Ok<void>():
-        _log.info('Study session successfuly deleted.');
+        _log.info('Study session deleted successfuly.');
 
         return result;
       case Error<void>():

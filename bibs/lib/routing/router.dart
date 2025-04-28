@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-import '../data/repositories/auth_repository.dart';
+import '../data/repositories/auth/auth_repository.dart';
 import '../ui/auth/view_models/sign_in_viewmodel.dart';
 import '../ui/auth/view_models/sign_up_viewmodel.dart';
 import '../ui/auth/widgets/sign_in_screen.dart';
 import '../ui/auth/widgets/sign_up_screen.dart';
 import '../ui/navigation/navigation_bar.dart';
+import '../ui/profile/view_models/profile_viewmodel.dart';
+import '../ui/profile/widgets/profile_screen.dart';
 import '../ui/session/widgets/session_screen.dart';
 import '../ui/session/view_models/session_viewmodel.dart';
 import '../ui/stats/view_models/stats_viewmodel.dart';
@@ -66,6 +68,14 @@ GoRouter router () => GoRouter(
       ]
     ),
     GoRoute(
+      path: Routes.profile,
+      builder:(context, state) {
+        return ProfileScreen(
+          viewModel: ProfileViewmodel(userRepository: context.read()),
+        );
+      },
+    ),
+    GoRoute(
       path: Routes.signUp,
       builder: (context, state) {
         return SignUpScreen(
@@ -81,7 +91,7 @@ GoRouter router () => GoRouter(
         );
       },
     )
-  ]
+  ],
 );
 
 Future<String?> _redirect(BuildContext context, GoRouterState state) async {

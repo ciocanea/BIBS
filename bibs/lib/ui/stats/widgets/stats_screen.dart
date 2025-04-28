@@ -31,9 +31,6 @@ class _StatsScreenState extends State<StatsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Stats'),
-      ),
       body: SafeArea(
         child: Center(
           child: ListenableBuilder(
@@ -53,7 +50,7 @@ class _StatsScreenState extends State<StatsScreen> {
                   Text(userProfile.username),
                   Text(userProfile.campus!),
                   Text(widget.viewModel.formattedUserTime),
-                  MyLeaderboard(leaderboardDataSource: leaderboard!, userId: userProfile.id)
+                  MyLeaderboard(leaderboardDataSource: leaderboard!, userId: userProfile.userId)
                 ],
               );
             }

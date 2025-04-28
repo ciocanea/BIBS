@@ -46,7 +46,7 @@ class AuthClient {
 
   Future<Result<Session?>> currentSession () async {
     try {
-      final response = await _supabaseClient.auth.currentSession;
+      final response = _supabaseClient.auth.currentSession;
 
       return Result.ok(response);
     }

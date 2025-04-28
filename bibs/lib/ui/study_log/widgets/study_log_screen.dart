@@ -29,9 +29,6 @@ class _StudyLogScreenState extends State<StudyLogScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Study Log'),
-      ),
       body: SafeArea(
         child: Center(
           child: ListenableBuilder(
@@ -53,7 +50,7 @@ class _StudyLogScreenState extends State<StudyLogScreen> {
                   final session = studySessions[index];
                   return ListTile(
                     title: Text('Session ${index + 1}'),
-                    subtitle: Text('Started at: ${session.startedAt}\nTime: ${session.time} ms'),
+                    subtitle: Text('Started at: ${session.startedAt}\nTime: ${session.duration} ms'),
                     trailing: IconButton(
                       onPressed: () async {
                         await widget.viewModel.deleteStudySession(session);

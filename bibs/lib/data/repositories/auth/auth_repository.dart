@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../utils/result.dart';
+import '../../../utils/result.dart';
 
 abstract class AuthRepository extends ChangeNotifier{
 

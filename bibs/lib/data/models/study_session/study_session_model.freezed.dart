@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$StudySession {
 
- String get id; int get time;@JsonKey(name: 'started_at') DateTime get startedAt;
+@JsonKey(name: 'id') String get sessionId; int get duration;@JsonKey(name: 'started_at') DateTime get startedAt;
 /// Create a copy of StudySession
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -29,16 +29,16 @@ $StudySessionCopyWith<StudySession> get copyWith => _$StudySessionCopyWithImpl<S
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is StudySession&&(identical(other.id, id) || other.id == id)&&(identical(other.time, time) || other.time == time)&&(identical(other.startedAt, startedAt) || other.startedAt == startedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is StudySession&&(identical(other.sessionId, sessionId) || other.sessionId == sessionId)&&(identical(other.duration, duration) || other.duration == duration)&&(identical(other.startedAt, startedAt) || other.startedAt == startedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,time,startedAt);
+int get hashCode => Object.hash(runtimeType,sessionId,duration,startedAt);
 
 @override
 String toString() {
-  return 'StudySession(id: $id, time: $time, startedAt: $startedAt)';
+  return 'StudySession(sessionId: $sessionId, duration: $duration, startedAt: $startedAt)';
 }
 
 
@@ -49,7 +49,7 @@ abstract mixin class $StudySessionCopyWith<$Res>  {
   factory $StudySessionCopyWith(StudySession value, $Res Function(StudySession) _then) = _$StudySessionCopyWithImpl;
 @useResult
 $Res call({
- String id, int time,@JsonKey(name: 'started_at') DateTime startedAt
+@JsonKey(name: 'id') String sessionId, int duration,@JsonKey(name: 'started_at') DateTime startedAt
 });
 
 
@@ -66,10 +66,10 @@ class _$StudySessionCopyWithImpl<$Res>
 
 /// Create a copy of StudySession
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? time = null,Object? startedAt = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? sessionId = null,Object? duration = null,Object? startedAt = null,}) {
   return _then(_self.copyWith(
-id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as String,time: null == time ? _self.time : time // ignore: cast_nullable_to_non_nullable
+sessionId: null == sessionId ? _self.sessionId : sessionId // ignore: cast_nullable_to_non_nullable
+as String,duration: null == duration ? _self.duration : duration // ignore: cast_nullable_to_non_nullable
 as int,startedAt: null == startedAt ? _self.startedAt : startedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,
   ));
@@ -82,11 +82,11 @@ as DateTime,
 @JsonSerializable()
 
 class _StudySession implements StudySession {
-  const _StudySession({required this.id, required this.time, @JsonKey(name: 'started_at') required this.startedAt});
+  const _StudySession({@JsonKey(name: 'id') required this.sessionId, required this.duration, @JsonKey(name: 'started_at') required this.startedAt});
   factory _StudySession.fromJson(Map<String, dynamic> json) => _$StudySessionFromJson(json);
 
-@override final  String id;
-@override final  int time;
+@override@JsonKey(name: 'id') final  String sessionId;
+@override final  int duration;
 @override@JsonKey(name: 'started_at') final  DateTime startedAt;
 
 /// Create a copy of StudySession
@@ -102,16 +102,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _StudySession&&(identical(other.id, id) || other.id == id)&&(identical(other.time, time) || other.time == time)&&(identical(other.startedAt, startedAt) || other.startedAt == startedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _StudySession&&(identical(other.sessionId, sessionId) || other.sessionId == sessionId)&&(identical(other.duration, duration) || other.duration == duration)&&(identical(other.startedAt, startedAt) || other.startedAt == startedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,time,startedAt);
+int get hashCode => Object.hash(runtimeType,sessionId,duration,startedAt);
 
 @override
 String toString() {
-  return 'StudySession(id: $id, time: $time, startedAt: $startedAt)';
+  return 'StudySession(sessionId: $sessionId, duration: $duration, startedAt: $startedAt)';
 }
 
 
@@ -122,7 +122,7 @@ abstract mixin class _$StudySessionCopyWith<$Res> implements $StudySessionCopyWi
   factory _$StudySessionCopyWith(_StudySession value, $Res Function(_StudySession) _then) = __$StudySessionCopyWithImpl;
 @override @useResult
 $Res call({
- String id, int time,@JsonKey(name: 'started_at') DateTime startedAt
+@JsonKey(name: 'id') String sessionId, int duration,@JsonKey(name: 'started_at') DateTime startedAt
 });
 
 
@@ -139,10 +139,10 @@ class __$StudySessionCopyWithImpl<$Res>
 
 /// Create a copy of StudySession
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? time = null,Object? startedAt = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? sessionId = null,Object? duration = null,Object? startedAt = null,}) {
   return _then(_StudySession(
-id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as String,time: null == time ? _self.time : time // ignore: cast_nullable_to_non_nullable
+sessionId: null == sessionId ? _self.sessionId : sessionId // ignore: cast_nullable_to_non_nullable
+as String,duration: null == duration ? _self.duration : duration // ignore: cast_nullable_to_non_nullable
 as int,startedAt: null == startedAt ? _self.startedAt : startedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,
   ));

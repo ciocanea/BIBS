@@ -6,10 +6,10 @@ part 'user_time_model.g.dart';
 @freezed
 abstract class UserTime with _$UserTime {
   const factory UserTime ({
-    required String id,
+    @JsonKey(name: 'id') required String userId,
     required String campus,
     required String username,
-    required int time
+    @JsonKey(name: 'total_time') required int totalTime
   }) = _UserTime;
 
   factory UserTime.fromJson(Map<String, dynamic> json) => _$UserTimeFromJson(json);
