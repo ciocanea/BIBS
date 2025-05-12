@@ -49,6 +49,16 @@
 	<string>Allow access to photo library to choose a profile picture.</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Allow access to photo library to take a profile picture.</string>
-
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+		<key>CFBundleTypeRole</key>
+		<string>Editor</string>
+		<key>CFBundleURLSchemes</key>
+		<array>
+			<string>io.supabase.flutterquickstart</string>
+		</array>
+		</dict>
+	</array>
 </dict>
 </plist>
