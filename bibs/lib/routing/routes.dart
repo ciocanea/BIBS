@@ -5,4 +5,6 @@ abstract final class Routes {
   static const studyLog = '/studyLog';
   static const stats = '/stats';
   static const profile = '/profile';
+  static const forgotPassword = '/forgot_password';
+  static const resetPassword = '/reset_password';
 }
