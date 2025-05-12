@@ -144,6 +144,7 @@ class AuthRepositoryRemote extends AuthRepository {
           _isAuthenticated = true;
 
           await _sharedPreferencesService.saveUserId(user.id);
+          _log.info(session.accessToken);
           await _sharedPreferencesService.saveToken(session.accessToken);
 
           _log.info('Sign in successful. Token and user ID saved.');
@@ -182,4 +183,47 @@ class AuthRepositoryRemote extends AuthRepository {
       notifyListeners();
     }
   }
+
+  @override
+  Future<Result<void>> deteleUser ({required String userId}) async {
+    final result = await _authClient.deleteUser();
+
+    switch (result) {
+      case Ok<void>():
+        _log.info('Deleted user succesfully.');
+        return result;
+      case Error<void>():
+        _log.severe('Failed to delete user: ${result.error}');
+        return result;
+    }
+  }
+
+  @override
+  Future<Result<void>> setPassword ({required String newPassword}) async {
+    final result = await _authClient.setPassword(newPassword);
+
+    switch (result) {
+      case Ok<void>():
+        _log.info('Changed password succesfully.');
+        return result;
+      case Error<void>():
+        _log.severe('Failed to change password: ${result.error}');
+        return result;
+    }
+  }
+  
+  @override
+  Future<Result<void>> sendPasswordReset ({required String email}) async {
+    final result = await _authClient.sendPasswordReset(email);
+
+    switch (result) {
+      case Ok<void>():
+        _log.info('Sent password reset succesfully.');
+        return result;
+      case Error<void>():
+        _log.severe('Failed to send password reset: ${result.error}');
+        return result;
+    }
+  }
+
 }
