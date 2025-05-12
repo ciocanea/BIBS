@@ -115,14 +115,4 @@ class SessionViewModel extends ChangeNotifier{
     _timer.cancel();
     super.dispose();
   }
-
-  Future<Result<void>> signOut () async {
-    final result = await _authRepository.signOut();
-
-    if(result is Error<void>) {
-      print(result.error);
-    }
-
-    return result;
-  }
 }

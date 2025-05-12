@@ -26,6 +26,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Sign Up'),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios_new),
+          tooltip: 'Back',
+          onPressed: () {
+            context.go(Routes.signIn);
+          },
+        ),
       ),
       body: SafeArea(
         child: Center(
