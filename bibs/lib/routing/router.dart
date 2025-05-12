@@ -4,8 +4,12 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../data/repositories/auth/auth_repository.dart';
+import '../ui/auth/view_models/forgot_password_viewmodel.dart';
+import '../ui/auth/view_models/reset_password_viewmodel.dart';
 import '../ui/auth/view_models/sign_in_viewmodel.dart';
 import '../ui/auth/view_models/sign_up_viewmodel.dart';
+import '../ui/auth/widgets/forgot_password_screen.dart';
+import '../ui/auth/widgets/reset_password_screen.dart';
 import '../ui/auth/widgets/sign_in_screen.dart';
 import '../ui/auth/widgets/sign_up_screen.dart';
 import '../ui/navigation/navigation_bar.dart';
@@ -71,7 +75,10 @@ GoRouter router () => GoRouter(
       path: Routes.profile,
       builder:(context, state) {
         return ProfileScreen(
-          viewModel: ProfileViewmodel(userRepository: context.read()),
+          viewModel: ProfileViewmodel(
+            authRepository: context.read(),
+            userRepository: context.read()
+          ),
         );
       },
     ),
@@ -90,6 +97,22 @@ GoRouter router () => GoRouter(
           viewModel: SignInViewModel(authRepository: context.read())
         );
       },
+    ),
+    GoRoute(
+      path: Routes.forgotPassword,
+      builder: (context, state) {
+        return ForgotPasswordScreen(
+          viewModel: ForgotPasswordViewModel(authRepository: context.read())
+        );
+      },
+    ),
+    GoRoute(
+      path: Routes.resetPassword,
+      builder: (context, state) {
+        return ResetPasswordScreen(
+          viewModel: ResetPasswordViewModel(authRepository: context.read())
+        );
+      },
     )
   ],
 );
@@ -99,8 +122,10 @@ Future<String?> _redirect(BuildContext context, GoRouterState state) async {
 
   final goingToSignIn = state.matchedLocation == Routes.signIn;
   final goingToSignUp = state.matchedLocation == Routes.signUp;
+  final goingToForgotPassword = state.matchedLocation == Routes.forgotPassword;
+  final goingToResetPassword = state.matchedLocation == Routes.resetPassword;
 
-  final isAuthPage = goingToSignIn || goingToSignUp;
+  final isAuthPage = goingToSignIn || goingToSignUp || goingToForgotPassword || goingToResetPassword;
 
   if (!loggedIn && !isAuthPage) {
     // User is not logged in and trying to go somewhere else

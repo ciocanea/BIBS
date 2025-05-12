@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../routing/routes.dart';
 import '../../../utils/result.dart';
@@ -20,6 +21,21 @@ class _SignInScreenState extends State<SignInScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
+  @override
+    void initState() {
+    super.initState();
+
+    Supabase.instance.client.auth.onAuthStateChange.listen((data) {
+      final event = data.event;
+      final session = data.session;
+
+      if (event == AuthChangeEvent.passwordRecovery &&
+          session?.accessToken != null &&
+          session?.user != null) {
+        GoRouter.of(context).go(Routes.resetPassword);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +105,14 @@ class _SignInScreenState extends State<SignInScreen> {
                   onPressed: () {
                     context.go(Routes.signUp);
                   },
-                child: const Text('Sign Up'))
+                  child: const Text('Sign Up')
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    context.go(Routes.forgotPassword);
+                  },
+                  child: const Text('Forgot Password')
+                )
               ],
             ),
           ),
