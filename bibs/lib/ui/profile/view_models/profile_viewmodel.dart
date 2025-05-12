@@ -5,15 +5,19 @@ import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../../data/models/user_profile/user_profile_model.dart';
+import '../../../data/repositories/auth/auth_repository.dart';
 import '../../../data/repositories/user/user_repository.dart';
 import '../../../utils/result.dart';
 
 class ProfileViewmodel extends ChangeNotifier{
 
   ProfileViewmodel({
+    required AuthRepository authRepository,
     required UserRepository userRepository,
-  }) : _userRepository = userRepository;
+  }) : _authRepository = authRepository,
+       _userRepository = userRepository;
 
+  final AuthRepository _authRepository;
   final UserRepository _userRepository;
 
   UserProfile? _userProfile;
@@ -54,6 +58,12 @@ class ProfileViewmodel extends ChangeNotifier{
     finally {
       notifyListeners();
     }
+  }
+
+  Future<Result<void>> changePassword (String newPassword) async {
+    final result = await _authRepository.setPassword(newPassword: newPassword);
+
+    return result;
   }
 
   Future<Result<void>> changeCampus (String newCampus) async {
@@ -123,5 +133,17 @@ class ProfileViewmodel extends ChangeNotifier{
     finally {
       notifyListeners();
     }
+  }
+
+  Future<Result<void>> deteleAccount (String userId) async {
+    final result = await _authRepository.deteleUser(userId: userId);
+
+    return result;
+  }
+
+  Future<Result<void>> signOut () async {
+    final result = await _authRepository.signOut();
+
+    return result;
   }
 }
