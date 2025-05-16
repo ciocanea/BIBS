@@ -6,6 +6,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'config/dependencies.dart';
+import 'core/themes/theme.dart';
 import 'routing/router.dart';
 
 Future<void> main() async {
@@ -26,6 +27,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
+      theme: AppTheme.defaultLightTheme,
+      darkTheme: AppTheme.defaultDarkTheme,
+      themeMode: ThemeMode.system,
       routerConfig: router(),
     );
   }
