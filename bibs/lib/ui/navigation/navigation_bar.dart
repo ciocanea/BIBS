@@ -18,6 +18,7 @@ class MyNavigationBar extends StatelessWidget {
     Routes.session,
     Routes.studyLog,
     Routes.stats,
+    Routes.profile
   ];
 
   @override
@@ -25,8 +26,13 @@ class MyNavigationBar extends StatelessWidget {
     final index = tabs.indexWhere((path) => currentLocation.startsWith(path));
     final currentIndex = index < 0 ? 0 : index;
 
+    final titles = ['Session', 'Study Log', 'Stats', 'Account'];
+    final title = titles[currentIndex];
 
     return Scaffold(
+      appBar: AppBar(
+        title: Text(title),
+      ),
       body: child,
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: currentIndex,
@@ -35,6 +41,7 @@ class MyNavigationBar extends StatelessWidget {
           BottomNavigationBarItem(icon: Icon(Icons.timer), label: 'Session'),
           BottomNavigationBarItem(icon: Icon(Icons.paste), label: 'Study Log'),
           BottomNavigationBarItem(icon: Icon(Icons.bar_chart), label: 'Stats'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Account'),
         ],
       ),
     );
