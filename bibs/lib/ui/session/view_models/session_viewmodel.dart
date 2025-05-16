@@ -32,6 +32,22 @@ class SessionViewModel extends ChangeNotifier{
   UserProfile? _userProfile;
   UserProfile? get userProfile => _userProfile;
 
+  String _startStopButtonText = "Start";
+  String get startStopButtonText => _startStopButtonText;
+
+  bool get isRunning => _stopwatch.isRunning;
+
+  bool _isPaused = false;
+  bool get isPaused => _isPaused;
+
+  String get formattedTime {
+    final milli = _stopwatch.elapsed.inMilliseconds;
+    final milliseconds = (milli % 1000).toString().padLeft(3, '0');
+    final seconds = ((milli ~/ 1000) % 60).toString().padLeft(2, '0');
+    final minutes = ((milli ~/ 1000) ~/ 60).toString().padLeft(2, '0');
+    return '$minutes:$seconds:$milliseconds';
+  }
+
   Future<Result<void>> load() async {
     try {
       final result = await _userRepository.getProfile();
@@ -64,46 +80,48 @@ class SessionViewModel extends ChangeNotifier{
     }
   }
 
-  String get formattedTime {
-    final milli = _stopwatch.elapsed.inMilliseconds;
-    final milliseconds = (milli % 1000).toString().padLeft(3, '0');
-    final seconds = ((milli ~/ 1000) % 60).toString().padLeft(2, '0');
-    final minutes = ((milli ~/ 1000) ~/ 60).toString().padLeft(2, '0');
-    return '$minutes:$seconds:$milliseconds';
-  }
 
-  bool get isRunning => _stopwatch.isRunning;
-
-  void startStop() {
-    if (_stopwatch.isRunning) {
-      _stopwatch.stop();
-    }
-    else {
-      _stopwatch.start();
-    }
-
+  void start() async {
+    _stopwatch.start();
     notifyListeners();
   }
-
-  Future<Result<void>> reset() async {
+  
+  void pauseUnpause() async {
     try {
-    _stopwatch.stop();
-
-    final timeResult = await _userRepository.updateTotalTime(duration: _stopwatch.elapsedMilliseconds);
-    
-    if (timeResult is Error) {
-      return timeResult;
+      if (_stopwatch.isRunning) {
+        _stopwatch.stop();
+        _isPaused = true;
+      }
+      else {
+        _stopwatch.start();
+        _isPaused = false;
+      }
     }
+    finally {
+      notifyListeners();
+    }
+  }
 
-    final sessionResult = await _studySessionRepository.createStudySession(
-      userId: _userProfile!.userId,
-      campus: _userProfile!.campus!,
-      duration: _stopwatch.elapsedMilliseconds,
-    );
+  Future<Result<void>> updateTotalTime() async {
+    try {
+      _stopwatch.stop();
+      int sessionDuration = _stopwatch.elapsedMilliseconds;
+      _stopwatch.reset();
+      _isPaused = false;
+    
+      final timeResult = await _userRepository.updateTotalTime(duration: sessionDuration);
+      
+      if (timeResult is Error) {
+        return timeResult;
+      }
 
-    _stopwatch.reset();
+      final sessionResult = await _studySessionRepository.createStudySession(
+        userId: _userProfile!.userId,
+        campus: _userProfile!.campus!,
+        duration: sessionDuration
+      );
 
-    return sessionResult;
+      return sessionResult;
     }
     finally {
       notifyListeners();

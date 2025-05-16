@@ -1,8 +1,8 @@
+import 'package:bibs/core/themes/colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
-import '../../../routing/routes.dart';
+import '../../../core/themes/dimentions.dart';
 import '../../../utils/result.dart';
 import '../view_models/session_viewmodel.dart';
 
@@ -38,18 +38,6 @@ class _SessionScreenState extends State<SessionScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Session'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.person),
-            tooltip: 'Profile',
-            onPressed: () {
-              context.go(Routes.profile);
-            }
-          ),
-        ],
-      ),
       body: SafeArea(
         child: Center(
           child: ListenableBuilder(
@@ -64,17 +52,39 @@ class _SessionScreenState extends State<SessionScreen> {
               return Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(userProfile.userId),
-                  Text(userProfile.username),
-                  Text(userProfile.campus ?? 'null'),
-                  CupertinoButton(
-                    onPressed: widget.viewModel.startStop,
-                    child: Text(widget.viewModel.formattedTime),
+                  Material(
+                    shape: const CircleBorder(),
+                    elevation: Dimentions.elevation,
+                    child: Container(
+                      width: 300,
+                      height: 300,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: AppColors.primaryColor,
+                          width: 8.0,
+                        ),
+                        color: AppColors.secondaryColor,
+                      ),
+                      child: Center(
+                        child: Text(
+                          widget.viewModel.formattedTime,
+                          style: const TextStyle(fontSize: 24),
+                        ),
+                      ),
+                    ),
                   ),
-                  CupertinoButton(
-                    onPressed: widget.viewModel.reset,
-                    child: Text('Reset'),
-                  )
+
+                  SizedBox(height: 50),
+
+                  SizedBox(
+                    height: 140,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: _buildControlButtons(),
+                    ),
+                  ),
+                  
                 ],
               );
             }
@@ -82,6 +92,53 @@ class _SessionScreenState extends State<SessionScreen> {
         ),
       ),
     );
+  }
+
+  List<Widget> _buildControlButtons() {
+    final style = ButtonStyle(
+      textStyle: const WidgetStatePropertyAll<TextStyle>(
+        TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+      ),
+      minimumSize: const WidgetStatePropertyAll(Size(200, 60)),
+    );
+
+    if (widget.viewModel.isRunning && !widget.viewModel.isPaused) {
+      return [
+        ElevatedButton(
+          onPressed: widget.viewModel.pauseUnpause,
+          style: style,
+          child: const Text("Take a break"),
+        ),
+        const SizedBox(height: 10),
+        ElevatedButton(
+          onPressed: widget.viewModel.updateTotalTime,
+          style: style,
+          child: const Text("End session"),
+        ),
+      ];
+    } else if (widget.viewModel.isPaused) {
+      return [
+        ElevatedButton(
+          onPressed: widget.viewModel.pauseUnpause,
+          style: style,
+          child: const Text("Resume"),
+        ),
+        const SizedBox(height: 10),
+        ElevatedButton(
+          onPressed: widget.viewModel.updateTotalTime,
+          style: style,
+          child: const Text("End session"),
+        ),
+      ];
+    } else {
+      return [
+        ElevatedButton(
+          onPressed: widget.viewModel.start,
+          style: style,
+          child: const Text("Start"),
+        ),
+      ];
+    }
   }
 }
 
