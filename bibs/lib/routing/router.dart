@@ -68,6 +68,17 @@ GoRouter router () => GoRouter(
             );
           },
         ),
+        GoRoute(
+          path: Routes.profile,
+          builder: (context, state) {
+            return ProfileScreen(
+              viewModel: ProfileViewmodel(
+                authRepository: context.read(),
+                userRepository: context.read(),
+              )
+            );
+          },
+        ),
 
       ]
     ),
