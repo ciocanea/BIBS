@@ -44,14 +44,43 @@ class _StatsScreenState extends State<StatsScreen> {
                 return const CircularProgressIndicator();
               }
 
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(userProfile.username),
-                  Text(userProfile.campus!),
-                  Text(widget.viewModel.formattedUserTime),
-                  MyLeaderboard(leaderboardDataSource: leaderboard!, userId: userProfile.userId)
-                ],
+              return SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(height: 32.0),
+
+                    // Text(
+                    //   "Total study time at ${userProfile.campus}",
+                    //   style: Theme.of(context).textTheme.headlineMedium,
+                    // ),
+
+                    // SizedBox(height: 16.0),
+
+                    Text(
+                      widget.viewModel.formattedUserTime,
+                      style: Theme.of(context).textTheme.headlineLarge
+                    ),
+
+                    SizedBox(height: 32.0),
+
+                    Divider(),
+
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: Text(
+                        'Also studying at ${userProfile.campus}',
+                        style: Theme.of(context).textTheme.headlineMedium,
+                      ),
+                    ),
+                    
+                    MyLeaderboard(
+                      leaderboardDataSource: leaderboard!,
+                      userId: userProfile.userId,
+                    ),
+                  ],
+                ),
               );
             }
           ),
