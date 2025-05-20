@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$UserTime {
 
-@JsonKey(name: 'id') String get userId; String get campus; String get username;@JsonKey(name: 'total_time') int get totalTime;
+@JsonKey(name: 'id') String get userId; String get campus; String get username;@JsonKey(name: 'total_time') int get totalTime;@JsonKey(name: 'image_path') String? get imagePath;
 /// Create a copy of UserTime
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -29,16 +29,16 @@ $UserTimeCopyWith<UserTime> get copyWith => _$UserTimeCopyWithImpl<UserTime>(thi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserTime&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.campus, campus) || other.campus == campus)&&(identical(other.username, username) || other.username == username)&&(identical(other.totalTime, totalTime) || other.totalTime == totalTime));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserTime&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.campus, campus) || other.campus == campus)&&(identical(other.username, username) || other.username == username)&&(identical(other.totalTime, totalTime) || other.totalTime == totalTime)&&(identical(other.imagePath, imagePath) || other.imagePath == imagePath));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,userId,campus,username,totalTime);
+int get hashCode => Object.hash(runtimeType,userId,campus,username,totalTime,imagePath);
 
 @override
 String toString() {
-  return 'UserTime(userId: $userId, campus: $campus, username: $username, totalTime: $totalTime)';
+  return 'UserTime(userId: $userId, campus: $campus, username: $username, totalTime: $totalTime, imagePath: $imagePath)';
 }
 
 
@@ -49,7 +49,7 @@ abstract mixin class $UserTimeCopyWith<$Res>  {
   factory $UserTimeCopyWith(UserTime value, $Res Function(UserTime) _then) = _$UserTimeCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'id') String userId, String campus, String username,@JsonKey(name: 'total_time') int totalTime
+@JsonKey(name: 'id') String userId, String campus, String username,@JsonKey(name: 'total_time') int totalTime,@JsonKey(name: 'image_path') String? imagePath
 });
 
 
@@ -66,13 +66,14 @@ class _$UserTimeCopyWithImpl<$Res>
 
 /// Create a copy of UserTime
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? userId = null,Object? campus = null,Object? username = null,Object? totalTime = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? userId = null,Object? campus = null,Object? username = null,Object? totalTime = null,Object? imagePath = freezed,}) {
   return _then(_self.copyWith(
 userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as String,campus: null == campus ? _self.campus : campus // ignore: cast_nullable_to_non_nullable
 as String,username: null == username ? _self.username : username // ignore: cast_nullable_to_non_nullable
 as String,totalTime: null == totalTime ? _self.totalTime : totalTime // ignore: cast_nullable_to_non_nullable
-as int,
+as int,imagePath: freezed == imagePath ? _self.imagePath : imagePath // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 
@@ -83,13 +84,14 @@ as int,
 @JsonSerializable()
 
 class _UserTime implements UserTime {
-  const _UserTime({@JsonKey(name: 'id') required this.userId, required this.campus, required this.username, @JsonKey(name: 'total_time') required this.totalTime});
+  const _UserTime({@JsonKey(name: 'id') required this.userId, required this.campus, required this.username, @JsonKey(name: 'total_time') required this.totalTime, @JsonKey(name: 'image_path') this.imagePath});
   factory _UserTime.fromJson(Map<String, dynamic> json) => _$UserTimeFromJson(json);
 
 @override@JsonKey(name: 'id') final  String userId;
 @override final  String campus;
 @override final  String username;
 @override@JsonKey(name: 'total_time') final  int totalTime;
+@override@JsonKey(name: 'image_path') final  String? imagePath;
 
 /// Create a copy of UserTime
 /// with the given fields replaced by the non-null parameter values.
@@ -104,16 +106,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserTime&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.campus, campus) || other.campus == campus)&&(identical(other.username, username) || other.username == username)&&(identical(other.totalTime, totalTime) || other.totalTime == totalTime));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserTime&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.campus, campus) || other.campus == campus)&&(identical(other.username, username) || other.username == username)&&(identical(other.totalTime, totalTime) || other.totalTime == totalTime)&&(identical(other.imagePath, imagePath) || other.imagePath == imagePath));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,userId,campus,username,totalTime);
+int get hashCode => Object.hash(runtimeType,userId,campus,username,totalTime,imagePath);
 
 @override
 String toString() {
-  return 'UserTime(userId: $userId, campus: $campus, username: $username, totalTime: $totalTime)';
+  return 'UserTime(userId: $userId, campus: $campus, username: $username, totalTime: $totalTime, imagePath: $imagePath)';
 }
 
 
@@ -124,7 +126,7 @@ abstract mixin class _$UserTimeCopyWith<$Res> implements $UserTimeCopyWith<$Res>
   factory _$UserTimeCopyWith(_UserTime value, $Res Function(_UserTime) _then) = __$UserTimeCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'id') String userId, String campus, String username,@JsonKey(name: 'total_time') int totalTime
+@JsonKey(name: 'id') String userId, String campus, String username,@JsonKey(name: 'total_time') int totalTime,@JsonKey(name: 'image_path') String? imagePath
 });
 
 
@@ -141,13 +143,14 @@ class __$UserTimeCopyWithImpl<$Res>
 
 /// Create a copy of UserTime
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? userId = null,Object? campus = null,Object? username = null,Object? totalTime = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? userId = null,Object? campus = null,Object? username = null,Object? totalTime = null,Object? imagePath = freezed,}) {
   return _then(_UserTime(
 userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as String,campus: null == campus ? _self.campus : campus // ignore: cast_nullable_to_non_nullable
 as String,username: null == username ? _self.username : username // ignore: cast_nullable_to_non_nullable
 as String,totalTime: null == totalTime ? _self.totalTime : totalTime // ignore: cast_nullable_to_non_nullable
-as int,
+as int,imagePath: freezed == imagePath ? _self.imagePath : imagePath // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 

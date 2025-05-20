@@ -11,6 +11,7 @@ _UserTime _$UserTimeFromJson(Map<String, dynamic> json) => _UserTime(
   campus: json['campus'] as String,
   username: json['username'] as String,
   totalTime: (json['total_time'] as num).toInt(),
+  imagePath: json['image_path'] as String?,
 );
 
 Map<String, dynamic> _$UserTimeToJson(_UserTime instance) => <String, dynamic>{
@@ -18,4 +19,5 @@ Map<String, dynamic> _$UserTimeToJson(_UserTime instance) => <String, dynamic>{
   'campus': instance.campus,
   'username': instance.username,
   'total_time': instance.totalTime,
+  'image_path': instance.imagePath,
 };
