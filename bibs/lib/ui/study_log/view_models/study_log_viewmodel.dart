@@ -22,6 +22,20 @@ class StudyLogViewModel extends ChangeNotifier{
   List<StudySession>? _studySessions;
   List<StudySession>? get studySessions => _studySessions;
 
+  String formatDuration(Duration duration) {
+    final hours = duration.inHours;
+    final minutes = duration.inMinutes.remainder(60);
+    final seconds = duration.inSeconds.remainder(60);
+
+    if (hours > 0) {
+      return '${hours}h ${minutes}m ${seconds}s';
+    } else if (minutes > 0) {
+      return '${minutes}m ${seconds}s';
+    } else {
+      return '${seconds}s';
+    }
+  }
+
   Future<Result<void>> load() async {
     try {
       final userProfileResult = await _userRepository.getProfile();
