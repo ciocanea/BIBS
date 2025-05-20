@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../../../data/models/user_profile/user_profile_model.dart';
-import '../../../data/repositories/auth/auth_repository.dart';
 import '../../../data/repositories/session/study_session_repository.dart';
 import '../../../data/repositories/user/user_repository.dart';
 import '../../../utils/result.dart';
@@ -13,11 +12,9 @@ class SessionViewModel extends ChangeNotifier{
   late final Timer _timer;
 
   SessionViewModel({
-    required AuthRepository authRepository,
     required UserRepository userRepository,
     required StudySessionRepository studySessionRepository
-  }) : _authRepository = authRepository,
-       _userRepository = userRepository,
+  }) : _userRepository = userRepository,
        _studySessionRepository = studySessionRepository {
     _timer = Timer.periodic(
       const Duration(milliseconds: 30),
@@ -25,15 +22,11 @@ class SessionViewModel extends ChangeNotifier{
     );
   }
 
-  final AuthRepository _authRepository;
   final UserRepository _userRepository;
   final StudySessionRepository _studySessionRepository;
 
   UserProfile? _userProfile;
   UserProfile? get userProfile => _userProfile;
-
-  String _startStopButtonText = "Start";
-  String get startStopButtonText => _startStopButtonText;
 
   bool get isRunning => _stopwatch.isRunning;
 
@@ -44,9 +37,11 @@ class SessionViewModel extends ChangeNotifier{
     final milli = _stopwatch.elapsed.inMilliseconds;
     final milliseconds = (milli % 1000).toString().padLeft(3, '0');
     final seconds = ((milli ~/ 1000) % 60).toString().padLeft(2, '0');
-    final minutes = ((milli ~/ 1000) ~/ 60).toString().padLeft(2, '0');
-    return '$minutes:$seconds:$milliseconds';
+    final minutes = ((milli ~/ 1000 ~/ 60) % 60).toString().padLeft(2, '0');
+    final hours = ((milli ~/ 1000 ~/ 60) ~/ 60).toString().padLeft(2, '0');
+    return '$hours:$minutes:$seconds:$milliseconds';
   }
+
 
   Future<Result<void>> load() async {
     try {

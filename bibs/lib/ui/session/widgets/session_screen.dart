@@ -1,38 +1,40 @@
 import 'package:bibs/core/themes/colors.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
 
 import '../../../core/themes/dimentions.dart';
 import '../../../utils/result.dart';
 import '../view_models/session_viewmodel.dart';
 
 class SessionScreen extends StatefulWidget {
-  const SessionScreen ({super.key, required this.viewModel});
+  const SessionScreen ({super.key});
 
-  final SessionViewModel viewModel;
+  // final SessionViewModel viewModel;
 
   @override
   State<SessionScreen> createState() => _SessionScreenState();
 }
 
 class _SessionScreenState extends State<SessionScreen> {
+  late final SessionViewModel _viewModel;
+
   @override
   void initState() {
     super.initState();
-    widget.viewModel.load().then((result) {
+
+    _viewModel = context.read<SessionViewModel>();
+
+    _viewModel.load().then((result) {
       if (result is Error) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Failed to load profile: ${result.error}'))
         );
       }
     });
-    widget.viewModel.setUserCampus('TU-Delft');
-  }
 
-  @override
-  void dispose() {
-    widget.viewModel.dispose();
-    super.dispose();
+    //REMOVE THIS WHEN ADDING NEW CAMPUS
+    _viewModel.setUserCampus('TU-Delft');
   }
 
   @override
@@ -41,9 +43,9 @@ class _SessionScreenState extends State<SessionScreen> {
       body: SafeArea(
         child: Center(
           child: ListenableBuilder(
-            listenable: widget.viewModel,
+            listenable: _viewModel,
             builder:(context, _) {
-              final userProfile = widget.viewModel.userProfile;
+              final userProfile = _viewModel.userProfile;
 
               if(userProfile == null) {
                 return const CircularProgressIndicator();
@@ -68,7 +70,7 @@ class _SessionScreenState extends State<SessionScreen> {
                       ),
                       child: Center(
                         child: Text(
-                          widget.viewModel.formattedTime,
+                          _viewModel.formattedTime,
                           style: const TextStyle(fontSize: 24),
                         ),
                       ),
@@ -102,30 +104,96 @@ class _SessionScreenState extends State<SessionScreen> {
       minimumSize: const WidgetStatePropertyAll(Size(200, 60)),
     );
 
-    if (widget.viewModel.isRunning && !widget.viewModel.isPaused) {
+    if (_viewModel.isRunning && !_viewModel.isPaused) {
       return [
         ElevatedButton(
-          onPressed: widget.viewModel.pauseUnpause,
+          onPressed: _viewModel.pauseUnpause,
           style: style,
-          child: const Text("Take a break"),
+          child: const Text("Pause"),
         ),
         const SizedBox(height: 10),
         ElevatedButton(
-          onPressed: widget.viewModel.updateTotalTime,
+          onPressed: () async {
+            final confirm = await showDialog<bool>(
+              context: context,
+              builder: (context) => AlertDialog(
+                title: const Text('End Session'),
+                content: const Text('Are you sure you want to end the session?'),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(false),
+                    child: const Text('Cancel'),
+                  ),
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(true),
+                    child: const Text('End'),
+                  ),
+                ],
+              ),
+            );
+
+            if (confirm == true) {
+              _viewModel.updateTotalTime().then((result) {
+                switch (result) {
+                  case Ok<void>():
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Study session saved.'))
+                    );
+                  case Error<void>():
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Failed to save study session: ${result.error}'))
+                    );
+                }
+              });
+            }
+          },
           style: style,
           child: const Text("End session"),
         ),
       ];
-    } else if (widget.viewModel.isPaused) {
+    } else if (_viewModel.isPaused) {
       return [
         ElevatedButton(
-          onPressed: widget.viewModel.pauseUnpause,
+          onPressed: _viewModel.pauseUnpause,
           style: style,
           child: const Text("Resume"),
         ),
         const SizedBox(height: 10),
         ElevatedButton(
-          onPressed: widget.viewModel.updateTotalTime,
+          onPressed: () async {
+            final confirm = await showDialog<bool>(
+              context: context,
+              builder: (context) => AlertDialog(
+                title: const Text('End Session'),
+                content: const Text('Are you sure you want to end the session?'),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(false),
+                    child: const Text('Cancel'),
+                  ),
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(true),
+                    child: const Text('End'),
+                  ),
+                ],
+              ),
+            );
+
+            if (confirm == true) {
+              _viewModel.updateTotalTime().then((result) {
+                switch (result) {
+                  case Ok<void>():
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Study session saved.'))
+                    );
+                  case Error<void>():
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Failed to save study session: ${result.error}'))
+                    );
+                }
+              });
+            }
+          },
           style: style,
           child: const Text("End session"),
         ),
@@ -133,7 +201,7 @@ class _SessionScreenState extends State<SessionScreen> {
     } else {
       return [
         ElevatedButton(
-          onPressed: widget.viewModel.start,
+          onPressed: _viewModel.start,
           style: style,
           child: const Text("Start"),
         ),
@@ -141,4 +209,3 @@ class _SessionScreenState extends State<SessionScreen> {
     }
   }
 }
-
