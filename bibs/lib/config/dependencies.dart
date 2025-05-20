@@ -14,6 +14,7 @@ import '../data/services/api/leaderboard_api.dart';
 import '../data/services/api/study_session_api.dart';
 import '../data/services/api/user_api.dart';
 import '../data/services/local/shared_prefrences_service.dart';
+import '../ui/session/view_models/session_viewmodel.dart';
 
 List<SingleChildWidget> get providers {
   return [
@@ -51,5 +52,12 @@ List<SingleChildWidget> get providers {
           studySessionClient: context.read(),
         ) as StudySessionRepository
     ),
+    ChangeNotifierProvider(
+      create: (context) => SessionViewModel(
+        userRepository: context.read(),
+        studySessionRepository: context.read(),
+      ),
+    ),
+
   ];
 }
