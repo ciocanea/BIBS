@@ -6,6 +6,7 @@ import 'dimentions.dart';
 abstract final class AppTheme {
   static const _textTheme = TextTheme(
     headlineLarge: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: AppColors.black),
+    headlineMedium: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: AppColors.black),
     headlineSmall: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.black),
     titleMedium: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.black),
     bodyLarge: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.black),
@@ -34,8 +35,12 @@ abstract final class AppTheme {
       foregroundColor: WidgetStatePropertyAll(AppColors.textColor),
       backgroundColor: WidgetStatePropertyAll<Color>(AppColors.secondaryColor),
       elevation: WidgetStatePropertyAll(Dimentions.elevation),
-      side: WidgetStatePropertyAll(BorderSide(color: AppColors.primaryColor, width: 3.0)),
+      side: WidgetStatePropertyAll(BorderSide(color: AppColors.primaryColor, width: 2.0)),
     ),
+  );
+
+  static const _lightListTileTheme = ListTileThemeData(
+    shape: BeveledRectangleBorder(side: BorderSide(color: AppColors.primaryColor, width: 1.0))
   );
 
   static const _inputDecorationTheme = InputDecorationTheme(
@@ -50,11 +55,12 @@ abstract final class AppTheme {
   static ThemeData defaultLightTheme = ThemeData(
     brightness: Brightness.light,
     colorScheme: AppColors.defaultLightColorScheme,
-    appBarTheme: _lightAppBarTheme,
-    inputDecorationTheme: _inputDecorationTheme,
     textTheme: _textTheme,
+    appBarTheme: _lightAppBarTheme,
     bottomNavigationBarTheme: _lightBottomNavigationBarTheme,
-    elevatedButtonTheme: _lightElevatedButtonTheme
+    elevatedButtonTheme: _lightElevatedButtonTheme,
+    listTileTheme: _lightListTileTheme,
+    inputDecorationTheme: _inputDecorationTheme,
   );
 
   static ThemeData defaultDarkTheme = ThemeData(

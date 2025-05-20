@@ -12,7 +12,7 @@ abstract final class AppColors {
   static const defaultLightColorScheme = ColorScheme(
     brightness: Brightness.light,
     primary: AppColors.primaryColor,
-    onPrimary: Color.fromARGB(255, 60, 0, 255),
+    onPrimary: AppColors.secondaryColor,
     // onPrimary: AppColors.white,
     secondary: Color.fromARGB(255, 30, 255, 0),
     // secondary: AppColors.black,
