@@ -16,7 +16,6 @@ import '../ui/navigation/navigation_bar.dart';
 import '../ui/profile/view_models/profile_viewmodel.dart';
 import '../ui/profile/widgets/profile_screen.dart';
 import '../ui/session/widgets/session_screen.dart';
-import '../ui/session/view_models/session_viewmodel.dart';
 import '../ui/stats/view_models/stats_viewmodel.dart';
 import '../ui/stats/widgets/stats_screen.dart';
 import '../ui/study_log/view_models/study_log_viewmodel.dart';
@@ -29,20 +28,23 @@ GoRouter router () => GoRouter(
   redirect: _redirect,
   routes: [
     ShellRoute(
-      builder: (context, state, child) => MyNavigationBar(
-        child: child,
-        currentLocation: state.uri.toString()
-        ),
+      builder: (context, state, child) {
+
+        return MyNavigationBar(
+          child: child,
+          currentLocation: state.uri.toString(),
+        );
+      },
       routes: [
         GoRoute(
           path: Routes.session,
           builder: (context, state) {
             return SessionScreen(
-              viewModel: SessionViewModel(
-                authRepository: context.read(),
-                userRepository: context.read(),
-                studySessionRepository: context.read(),
-              )
+              // viewModel: SessionViewModel(
+              //   authRepository: context.read(),
+              //   userRepository: context.read(),
+              //   studySessionRepository: context.read(),
+              // )
             );
           },
         ),

@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 import '../../routing/routes.dart';
+import '../session/view_models/session_viewmodel.dart';
 
 class MyNavigationBar extends StatelessWidget {
 
   const MyNavigationBar({
     super.key,
     required this.child,
-    required this.currentLocation
+    required this.currentLocation,
   });
 
   final Widget child;
@@ -36,7 +38,18 @@ class MyNavigationBar extends StatelessWidget {
       body: child,
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: currentIndex,
-        onTap: (idx) => context.go(tabs[idx]),
+        onTap: (idx) {
+          final sessionViewModel = context.read<SessionViewModel>();
+
+          if ((sessionViewModel.isRunning || sessionViewModel.isPaused) && idx != 0) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('End your session before switching tabs.')),
+            );
+            return;
+          }
+
+          context.go(tabs[idx]);
+        },
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.timer), label: 'Session'),
           BottomNavigationBarItem(icon: Icon(Icons.paste), label: 'Study Log'),

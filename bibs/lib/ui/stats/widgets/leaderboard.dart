@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/themes/colors.dart';
 import '../../../data/models/user_time/user_time_model.dart';
 
 class LeaderboardDataSource extends DataTableSource {
@@ -21,9 +22,24 @@ class LeaderboardDataSource extends DataTableSource {
           ? WidgetStateProperty.all(const Color.fromARGB(119, 251, 255, 2))
           : null,
       cells: [
-        DataCell(Text('${index + 1}')),
-        DataCell(Text(userTime.username)),
-        DataCell(Text(formattedUserTime(userTime.totalTime))),
+        DataCell(Row(
+          children: [
+            Text('${index + 1}'),
+            SizedBox(width: 10.0),
+            CircleAvatar(
+              backgroundColor: AppColors.primaryColor,
+              radius: 18,
+              backgroundImage: userTime.imagePath != null
+                ? NetworkImage(userTime.imagePath!)
+                : null,
+              child: userTime.imagePath == null
+                  ? const Icon(Icons.person, size: 24, color: AppColors.secondaryColor,)
+                  : null,
+            ),
+          ],
+        )),
+        DataCell(Text(userTime.username, overflow: TextOverflow.ellipsis)),
+        DataCell(Text(formattedUserTime(userTime.totalTime), overflow: TextOverflow.ellipsis)),
       ],
     );
   }
@@ -45,28 +61,50 @@ class LeaderboardDataSource extends DataTableSource {
     final minutes = (duration.inMinutes % 60).toString().padLeft(2, '0');
     final seconds = (duration.inSeconds % 60).toString().padLeft(2, '0');
 
-    return '${days}D ${hours}H ${minutes}M ${seconds}S';
+    return '${days}d ${hours}h ${minutes}m ${seconds}s';
   }
 }
 
 class MyLeaderboard extends StatelessWidget {
-
-  const MyLeaderboard({super.key, required this.leaderboardDataSource, required this.userId});
+  const MyLeaderboard({
+    super.key,
+    required this.leaderboardDataSource,
+    required this.userId,
+    this.rowsPerPage = 30,
+  });
 
   final List<UserTime> leaderboardDataSource;
   final String userId;
+  final int rowsPerPage;
 
   @override
-  Widget build(BuildContext context){
-    return PaginatedDataTable(
-      header: Text('Leaderboard'),
-      columns: const [
-        DataColumn(label: Text('Pos.')),
-        DataColumn(label: Text('Username')),
-        DataColumn(label: Text('Total Time'))
-      ],
-      source: LeaderboardDataSource(leaderboardDataSource, userId),
-      rowsPerPage: 5,
+  Widget build(BuildContext context) {
+    final userIndex = leaderboardDataSource.indexWhere((u) => u.userId == userId);
+    final initialFirstRowIndex = userIndex >= 0
+        ? (userIndex ~/ rowsPerPage) * rowsPerPage
+        : 0;
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minWidth: constraints.maxWidth),
+            child: PaginatedDataTable(
+              columns: const [
+                DataColumn(label: Center(child: Text('Pos.'))),
+                DataColumn(label: Center(child: Text('Username'))),
+                DataColumn(label: Center(child: Text('Total Time'))),
+              ],
+              source: LeaderboardDataSource(leaderboardDataSource, userId),
+              rowsPerPage: 30,
+              columnSpacing: 12,
+              initialFirstRowIndex: initialFirstRowIndex,
+              onPageChanged: (_) {},
+            )
+          ),
+        );
+      },
     );
   }
 }

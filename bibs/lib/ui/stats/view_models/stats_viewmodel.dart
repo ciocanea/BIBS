@@ -68,7 +68,7 @@ class StatsViewModel extends ChangeNotifier{
     final minutes = duration.inMinutes % 60;
     final seconds = duration.inSeconds % 60;
 
-    return '$days days\n$hours hours\n$minutes minutes\n$seconds seconds';
+    return '$days DAYS\n$hours HOURS\n$minutes MINUTES\n$seconds SECONDS';
   }
 
 }
