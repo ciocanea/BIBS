@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../routing/routes.dart';
+import '../../../utils/result.dart';
 import '../view_models/forgot_password_viewmodel.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
@@ -41,42 +42,83 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Forgot Password'),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios_new),
+          tooltip: 'Back',
+          onPressed: () {
+            context.go(Routes.signIn);
+          },
+        ),
       ),
       body: SafeArea(
         child: Center(
-          child: Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                TextFormField(
-                  controller: _emailController,
-                  decoration: const InputDecoration(
-                    hintText: 'Enter your account email',
+          child: SingleChildScrollView(
+            padding: EdgeInsets.all(16.0),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Center(
+                    child: Image.asset(
+                      'assets/images/bibs_logo_no_bg.png',
+                      height: 250,
+                    ),
                   ),
-                  validator: (String? value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter some text';
-                    }
-                    return null;
-                  },
-                ),
-                ElevatedButton(
-                  onPressed: () async {
-                    if (_formKey.currentState!.validate()) {
-                      widget.viewModel.sendPasswordReset(_emailController.text.trim());
-                      return;
-                    }
-                    else {
+                  TextFormField(
+                    controller: _emailController,
+                    decoration: const InputDecoration(
+                      label: Text("Account Email"),
+                      hintText: 'Type your account email...',
+                    ),
+                    validator: (String? value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter some text';
+                      }
+
+                      final emailRegex = RegExp(r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$");
+
+                      if (!emailRegex.hasMatch(value)) {
+                        return 'Please enter a valid email address';
+                      }
+
+                      return null;
+                    },
+                  ),
+
+                  SizedBox(height: 16.0),
+
+                  ElevatedButton(
+                    onPressed: () async {
+                      if (!_formKey.currentState!.validate()) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content: Text('Invalid Input')
+                            content: Text('Invalid email.')
                           )
                         );
-                    }
-                  },
-                  child: const Text('Send Password Reset Email'),
-                ),
-              ],
+                      }
+
+                      final result = await widget.viewModel.sendPasswordReset(_emailController.text.trim());
+
+                      switch (result) {
+                        case Ok<void>():
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Password reset email sent.')
+                            )
+                          );
+                        case Error<void>():
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Failed to send password reset email.')
+                            )
+                          );
+                      }
+                    },
+                    child: const Text('Send Password Reset Email'),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

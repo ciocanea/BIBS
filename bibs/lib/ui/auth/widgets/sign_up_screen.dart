@@ -19,6 +19,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
 
 
   @override
@@ -36,63 +37,106 @@ class _SignUpScreenState extends State<SignUpScreen> {
       ),
       body: SafeArea(
         child: Center(
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                TextFormField(
-                  controller: _emailController,
-                  decoration: const InputDecoration(
-                    hintText: 'Enter your email',
+          child: SingleChildScrollView(
+            padding: EdgeInsets.all(16.0),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Center(
+                    child: Image.asset(
+                      'assets/images/bibs_logo_no_bg.png',
+                      height: 250,
+                    ),
                   ),
-                  validator: (String? value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter some text';
-                    }
-                    return null;
-                  },
-                ),
-                TextFormField(
-                  controller: _passwordController,
-                  decoration: const InputDecoration(
-                    hintText: 'Enter your password',
-                  ),
-                  obscureText: true,
-                  validator: (String? value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter some text';
-                    }
-                    return null;
-                  },
-                ),
-                ElevatedButton(
-                  onPressed: () async {
-                    if (_formKey.currentState!.validate()) {
-                      final result = await widget.viewModel.signUpWithEmailPassword(_emailController.text, _passwordController.text);
 
-                      if(result is Error<void>) {
+                  TextFormField(
+                    controller: _emailController,
+                    decoration: const InputDecoration(
+                      label: Text('Email'),
+                      hintText: 'Type your email...',
+                    ),
+                    validator: widget.viewModel.emailValidator
+                  ),
+
+                  SizedBox(height: 16.0),
+
+                  TextFormField(
+                    controller: _passwordController,
+                    decoration: const InputDecoration(
+                      label: Text('Password'),
+                      hintText: 'Type your password...',
+                    ),
+                    obscureText: true,
+                    validator: widget.viewModel.passwordValidator
+                  ),
+
+                  SizedBox(height: 16.0),
+
+                  TextFormField(
+                    controller: _confirmPasswordController,
+                    decoration: const InputDecoration(
+                      label: Text('Confirm Password'),
+                      hintText: 'Type your password...',
+                    ),
+                    obscureText: true,
+                    validator: (String? value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter some text';
+                      }
+                      return null;
+                    },
+                  ),
+
+                  SizedBox(height: 16.0),
+
+                  ElevatedButton(
+                    onPressed: () async {
+                      final emailValidationMessage = widget.viewModel.emailValidator(_emailController.text.trim());
+                      final passwordValidationMessage = widget.viewModel.passwordValidator(_passwordController.text.trim());
+
+                      
+                      if (emailValidationMessage != null) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('${result.error}')
-                          )
+                          SnackBar(content: Text(emailValidationMessage)),
+                        );
+                        return;
+                      }
+                      
+                      if (passwordValidationMessage != null) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text(passwordValidationMessage)),
                         );
                         return;
                       }
 
-                      context.go(Routes.session);
-                    }
-                    else {
+                      if (_passwordController.text != _confirmPasswordController.text) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content: Text('Invalid Input')
+                            content: Text('Passwords do not match.')
                           )
                         );
-                    }
-                  },
-                  child: const Text('Sign Up'),
-                ),
-              ],
+                        return;
+                      }
+                      
+                      final result = await widget.viewModel.signUpWithEmailPassword(_emailController.text, _passwordController.text);
+          
+                      switch (result) {
+                        case Ok<void>():
+                          context.go(Routes.session);
+                        case Error<void>():
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Failed to sign up. Please try again later.')
+                            )
+                          );
+                      }
+                    },
+                    child: const Text('Sign Up'),
+                  ),
+                ],
+              ),
             ),
           ),
         )

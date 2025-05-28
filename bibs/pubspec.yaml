@@ -70,6 +70,7 @@ dev_dependencies:
 # The following section is specific to Flutter packages.
 flutter:
   assets:
+    - assets/images/bibs_logo_no_bg.png
     - .env
 
   # The following line ensures that the Material Icons font is

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/themes/colors.dart';
+import '../../../core/themes/dimentions.dart';
 import '../../../utils/result.dart';
 import '../view_models/stats_viewmodel.dart';
 import 'leaderboard.dart';
@@ -57,9 +59,27 @@ class _StatsScreenState extends State<StatsScreen> {
 
                     // SizedBox(height: 16.0),
 
-                    Text(
-                      widget.viewModel.formattedUserTime,
-                      style: Theme.of(context).textTheme.headlineLarge
+                    Material(
+                      shape: const CircleBorder(),
+                      elevation: Dimentions.elevation,
+                      child: Container(
+                        width: 300,
+                        height: 300,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: AppColors.primaryColor,
+                            width: 8.0,
+                          ),
+                          color: AppColors.secondaryColor,
+                        ),
+                        child: Center(
+                          child: Text(
+                            widget.viewModel.formattedUserTime,
+                            style: Theme.of(context).textTheme.headlineLarge,
+                          ),
+                        ),
+                      ),
                     ),
 
                     SizedBox(height: 32.0),

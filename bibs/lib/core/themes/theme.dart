@@ -35,7 +35,14 @@ abstract final class AppTheme {
       foregroundColor: WidgetStatePropertyAll(AppColors.textColor),
       backgroundColor: WidgetStatePropertyAll<Color>(AppColors.secondaryColor),
       elevation: WidgetStatePropertyAll(Dimentions.elevation),
-      side: WidgetStatePropertyAll(BorderSide(color: AppColors.primaryColor, width: 2.0)),
+      side: WidgetStatePropertyAll(BorderSide(color: AppColors.primaryColor, width: 1.5)),
+    ),
+  );
+
+  static const _lightTextButtonTheme = TextButtonThemeData(
+    style: ButtonStyle(
+      foregroundColor: WidgetStatePropertyAll(AppColors.textColor),
+      backgroundColor: WidgetStatePropertyAll<Color>(AppColors.secondaryColor),
     ),
   );
 
@@ -44,6 +51,16 @@ abstract final class AppTheme {
   );
 
   static const _inputDecorationTheme = InputDecorationTheme(
+    filled: true,
+    fillColor: AppColors.white,
+    enabledBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.all(Radius.circular(Dimentions.borderRadius)),
+      borderSide: BorderSide(color: AppColors.primaryColor, width: 3.0),
+    ),
+    border: OutlineInputBorder(
+      borderSide: BorderSide(color: AppColors.primaryColor, width: 3.0),
+      borderRadius: BorderRadius.all(Radius.circular(Dimentions.borderRadius)),
+    ),
     hintStyle: TextStyle(
       color: AppColors.textColor,
       fontSize: 18.0,
@@ -59,6 +76,7 @@ abstract final class AppTheme {
     appBarTheme: _lightAppBarTheme,
     bottomNavigationBarTheme: _lightBottomNavigationBarTheme,
     elevatedButtonTheme: _lightElevatedButtonTheme,
+    textButtonTheme: _lightTextButtonTheme,
     listTileTheme: _lightListTileTheme,
     inputDecorationTheme: _inputDecorationTheme,
   );
