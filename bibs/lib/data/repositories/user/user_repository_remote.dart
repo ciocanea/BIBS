@@ -25,6 +25,8 @@ class UserRepositoryRemote extends UserRepository {
 
   UserProfile? _userProfile;
 
+
+
   Future<Result<UserProfile>> _fetchUser () async {
     final sharedPreferencesResult = await _sharedPreferencesService.fetchUserId();
     switch (sharedPreferencesResult) {
@@ -54,6 +56,12 @@ class UserRepositoryRemote extends UserRepository {
     }
   }
 
+  @override
+  void clear() {
+    _userProfile = null;
+    _log.info('Cleared cached user profile from memory.');
+  }
+  
   @override
   Future<Result<UserProfile>> getProfile () async {
     if(_userProfile != null) {
@@ -111,6 +119,7 @@ class UserRepositoryRemote extends UserRepository {
     }
 
     final setCampusResult = await _userClient.setCampus(userId, newCampus);
+    _log.info("Setting campus for user $userId");
     switch (setCampusResult) {
       case Ok<UserProfileResponse>():
         final userProfile = UserProfile.fromJson(setCampusResult.value.profile);

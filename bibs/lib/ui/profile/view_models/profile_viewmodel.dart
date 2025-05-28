@@ -166,7 +166,7 @@ class ProfileViewmodel extends ChangeNotifier{
 
   Future<Result<void>> signOut () async {
     final result = await _authRepository.signOut();
-
+    
     return result;
   }
 }
