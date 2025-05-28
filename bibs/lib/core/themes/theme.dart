@@ -35,7 +35,7 @@ abstract final class AppTheme {
       foregroundColor: WidgetStatePropertyAll(AppColors.textColor),
       backgroundColor: WidgetStatePropertyAll<Color>(AppColors.secondaryColor),
       elevation: WidgetStatePropertyAll(Dimentions.elevation),
-      side: WidgetStatePropertyAll(BorderSide(color: AppColors.primaryColor, width: 2.0)),
+      side: WidgetStatePropertyAll(BorderSide(color: AppColors.primaryColor, width: 1.5)),
     ),
   );
 
@@ -52,7 +52,7 @@ abstract final class AppTheme {
 
   static const _inputDecorationTheme = InputDecorationTheme(
     filled: true,
-    fillColor: AppColors.ternaryColor,
+    fillColor: AppColors.white,
     enabledBorder: OutlineInputBorder(
       borderRadius: BorderRadius.all(Radius.circular(Dimentions.borderRadius)),
       borderSide: BorderSide(color: AppColors.primaryColor, width: 3.0),
