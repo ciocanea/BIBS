@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 abstract final class AppColors {
-  static const primaryColor = Color.fromARGB(255, 99, 99, 99);
-  static const secondaryColor = Color.fromARGB(255, 154, 154, 154);
-  static const ternaryColor = Color.fromARGB(255, 176, 176, 176);
+  static const primaryColor = Color.fromARGB(255, 0, 166, 214);
+  static const secondaryColor = Color.fromARGB(255, 255, 255, 255);
+  static const ternaryColor = Color.fromARGB(255, 255, 255, 255);
   static const textColor = Color.fromARGB(255, 0, 0, 0);
   static const black = Color.fromARGB(255, 0, 0, 0);
   static const white = Color.fromARGB(255, 255, 255, 255);
-  static const red = Color.fromARGB(255, 200, 20, 0);
+  static const alertColor = Color.fromARGB(255, 163, 16, 0);
 
   static const defaultLightColorScheme = ColorScheme(
     brightness: Brightness.light,
@@ -20,9 +20,9 @@ abstract final class AppColors {
     // onSecondary: AppColors.white,
     surface: AppColors.secondaryColor,
     onSurface: AppColors.black,
-    error: Colors.purple,
+    error: AppColors.alertColor,
     // error: Colors.white,
-    onError: Colors.red,
+    onError: AppColors.alertColor,
   );
 
   static const defaultDarkColorScheme = ColorScheme(
@@ -34,6 +34,6 @@ abstract final class AppColors {
     surface: AppColors.black,
     onSurface: Colors.white,
     error: Colors.black,
-    onError: AppColors.red,
+    onError: AppColors.alertColor,
   );
 }

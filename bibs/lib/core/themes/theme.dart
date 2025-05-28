@@ -39,11 +39,28 @@ abstract final class AppTheme {
     ),
   );
 
+  static const _lightTextButtonTheme = TextButtonThemeData(
+    style: ButtonStyle(
+      foregroundColor: WidgetStatePropertyAll(AppColors.textColor),
+      backgroundColor: WidgetStatePropertyAll<Color>(AppColors.secondaryColor),
+    ),
+  );
+
   static const _lightListTileTheme = ListTileThemeData(
     shape: BeveledRectangleBorder(side: BorderSide(color: AppColors.primaryColor, width: 1.0))
   );
 
   static const _inputDecorationTheme = InputDecorationTheme(
+    filled: true,
+    fillColor: AppColors.ternaryColor,
+    enabledBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.all(Radius.circular(Dimentions.borderRadius)),
+      borderSide: BorderSide(color: AppColors.primaryColor, width: 3.0),
+    ),
+    border: OutlineInputBorder(
+      borderSide: BorderSide(color: AppColors.primaryColor, width: 3.0),
+      borderRadius: BorderRadius.all(Radius.circular(Dimentions.borderRadius)),
+    ),
     hintStyle: TextStyle(
       color: AppColors.textColor,
       fontSize: 18.0,
@@ -59,6 +76,7 @@ abstract final class AppTheme {
     appBarTheme: _lightAppBarTheme,
     bottomNavigationBarTheme: _lightBottomNavigationBarTheme,
     elevatedButtonTheme: _lightElevatedButtonTheme,
+    textButtonTheme: _lightTextButtonTheme,
     listTileTheme: _lightListTileTheme,
     inputDecorationTheme: _inputDecorationTheme,
   );
