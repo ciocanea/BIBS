@@ -65,7 +65,7 @@ class LeaderboardDataSource extends DataTableSource {
   }
 }
 
-class MyLeaderboard extends StatelessWidget {
+class MyLeaderboard extends StatefulWidget {
   const MyLeaderboard({
     super.key,
     required this.leaderboardDataSource,
@@ -78,12 +78,27 @@ class MyLeaderboard extends StatelessWidget {
   final int rowsPerPage;
 
   @override
-  Widget build(BuildContext context) {
-    final userIndex = leaderboardDataSource.indexWhere((u) => u.userId == userId);
-    final initialFirstRowIndex = userIndex >= 0
-        ? (userIndex ~/ rowsPerPage) * rowsPerPage
-        : 0;
+  State<MyLeaderboard> createState() => _MyLeaderboardState();
+}
 
+class _MyLeaderboardState extends State<MyLeaderboard> {
+  late final int _userPageIndex;
+  late final int _initialFirstRowIndex;
+  late final Key _tableKey;
+
+  @override
+  void initState() {
+    super.initState();
+    final userIndex = widget.leaderboardDataSource.indexWhere((u) => u.userId == widget.userId);
+    _userPageIndex = userIndex >= 0 ? userIndex ~/ widget.rowsPerPage : 0;
+    _initialFirstRowIndex = _userPageIndex * widget.rowsPerPage;
+
+    // Changing the key will force the DataTable to rebuild from scratch.
+    _tableKey = ValueKey('leaderboard-${_initialFirstRowIndex}');
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
         return SingleChildScrollView(
@@ -91,17 +106,18 @@ class MyLeaderboard extends StatelessWidget {
           child: ConstrainedBox(
             constraints: BoxConstraints(minWidth: constraints.maxWidth),
             child: PaginatedDataTable(
+              key: _tableKey, // critical to force jump to new page
               columns: const [
                 DataColumn(label: Center(child: Text('Pos.'))),
                 DataColumn(label: Center(child: Text('Username'))),
                 DataColumn(label: Center(child: Text('Total Time'))),
               ],
-              source: LeaderboardDataSource(leaderboardDataSource, userId),
-              rowsPerPage: 30,
+              source: LeaderboardDataSource(widget.leaderboardDataSource, widget.userId),
+              rowsPerPage: widget.rowsPerPage,
               columnSpacing: 12,
-              initialFirstRowIndex: initialFirstRowIndex,
-              onPageChanged: (_) {},
-            )
+              initialFirstRowIndex: _initialFirstRowIndex,
+              onPageChanged: (_) {}, // optional
+            ),
           ),
         );
       },

@@ -31,13 +31,17 @@ List<SingleChildWidget> get providers {
         ) as AuthRepository
     ),
     ProxyProvider<AuthRepository, UserRepository>(
-      update: (context, authRepo, _) {
-        authRepo.resetTrigger;
-
-        return UserRepositoryRemote(
+      update: (context, authRepo, previousRepo) {
+        final userRepository = previousRepo ?? UserRepositoryRemote(
           userClient: context.read(),
           sharedPreferencesService: context.read(),
         );
+
+        if (!authRepo.resetTrigger) {
+          userRepository.clear(); // Invalidate cache if the user signed out
+        }
+
+        return userRepository;
       },
     ),
     Provider(

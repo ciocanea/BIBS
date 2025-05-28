@@ -5,6 +5,8 @@ import '../../../utils/result.dart';
 
 abstract class UserRepository {
 
+  void clear();
+  
   Future<Result<UserProfile>> getProfile ();
 
   Future<Result<UserProfile>> setUsername ({required String newUsername});
@@ -16,4 +18,5 @@ abstract class UserRepository {
   Future<Result<int>> getTotalTime ();
 
   Future<Result<void>> updateTotalTime ({required int duration});
+
 }
