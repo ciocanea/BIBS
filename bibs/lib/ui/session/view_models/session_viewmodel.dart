@@ -55,6 +55,9 @@ class SessionViewModel extends ChangeNotifier{
       }
     } 
     finally {
+      //REMOVE THIS WHEN ADDING NEW CAMPUS
+      setUserCampus("TU-Delft");
+
       notifyListeners();
     }
   }

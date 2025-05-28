@@ -22,8 +22,9 @@ class _SessionScreenState extends State<SessionScreen> {
   @override
   void initState() {
     super.initState();
-
     _viewModel = context.read<SessionViewModel>();
+    
+
 
     _viewModel.load().then((result) {
       if (result is Error) {
@@ -33,8 +34,6 @@ class _SessionScreenState extends State<SessionScreen> {
       }
     });
 
-    //REMOVE THIS WHEN ADDING NEW CAMPUS
-    _viewModel.setUserCampus('TU-Delft');
   }
 
   @override
