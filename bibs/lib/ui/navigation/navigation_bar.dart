@@ -33,6 +33,10 @@ class MyNavigationBar extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
+        leading: Image.asset(
+          'assets/images/bibs_logo_no_bg.png',
+          height: 25,
+        ),
         title: Text(title),
       ),
       body: child,
