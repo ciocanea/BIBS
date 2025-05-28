@@ -57,9 +57,9 @@ class LeaderboardDataSource extends DataTableSource {
     final duration = Duration(milliseconds: userTime);
 
     final days = duration.inDays.toString();
-    final hours = (duration.inHours % 24).toString().padLeft(2, '0');
-    final minutes = (duration.inMinutes % 60).toString().padLeft(2, '0');
-    final seconds = (duration.inSeconds % 60).toString().padLeft(2, '0');
+    final hours = (duration.inHours % 24).toString().padLeft(1, '0');
+    final minutes = (duration.inMinutes % 60).toString().padLeft(1, '0');
+    final seconds = (duration.inSeconds % 60).toString().padLeft(1, '0');
 
     return '${days}d ${hours}h ${minutes}m ${seconds}s';
   }
