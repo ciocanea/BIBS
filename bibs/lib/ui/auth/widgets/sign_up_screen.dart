@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../routing/routes.dart';
 import '../../../utils/result.dart';
+import '../../connectivity_checker/connectivity_checker.dart';
 import '../view_models/sign_up_viewmodel.dart';
 
 class SignUpScreen extends StatefulWidget{
@@ -126,6 +127,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         case Ok<void>():
                           context.go(Routes.session);
                         case Error<void>():
+                          final hasConnection = await hasInternetAccess();
+                          
+                          if (!hasConnection) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('No internet connection.')),
+                            );
+                            context.go(Routes.noInternet);
+                            return;
+                          }
+                          
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text('Failed to sign up. Please try again later.')

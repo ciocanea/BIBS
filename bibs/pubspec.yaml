@@ -49,16 +49,11 @@ dependencies:
   intl: ^0.20.2
   collection: ^1.19.1
   data_table_2: ^2.6.0
+  flutter_native_splash: ^2.4.6
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
-  # The "flutter_lints" package below contains a set of recommended lints to
-  # encourage good coding practices. The lint set provided by the package is
-  # activated in the `analysis_options.yaml` file located at the root of your
-  # package. See that file for information about deactivating specific lint
-  # rules and activating additional ones.
   flutter_lints: ^5.0.0
   build_runner: ^2.4.15
   freezed: ^3.0.4
@@ -71,6 +66,8 @@ dev_dependencies:
 flutter:
   assets:
     - assets/images/bibs_logo_no_bg.png
+    - assets/images/bibs_logo_256.png
+    - assets/images/bibs_logo.png
     - .env
 
   # The following line ensures that the Material Icons font is
@@ -108,3 +105,10 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+flutter_native_splash:
+  color: "#ffffff" # or your background color
+  image: assets/images/bibs_logo_no_bg.png
+  android: true
+  ios: true
+  web: false

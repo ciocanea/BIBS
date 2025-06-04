@@ -12,6 +12,8 @@ import '../ui/auth/widgets/forgot_password_screen.dart';
 import '../ui/auth/widgets/reset_password_screen.dart';
 import '../ui/auth/widgets/sign_in_screen.dart';
 import '../ui/auth/widgets/sign_up_screen.dart';
+import '../ui/connectivity_checker/connectivity_checker.dart';
+import '../ui/connectivity_checker/no_internet_screen.dart';
 import '../ui/navigation/navigation_bar.dart';
 import '../ui/profile/view_models/profile_viewmodel.dart';
 import '../ui/profile/widgets/profile_screen.dart';
@@ -126,11 +128,22 @@ GoRouter router () => GoRouter(
           viewModel: ResetPasswordViewModel(authRepository: context.read())
         );
       },
-    )
+    ),
+    GoRoute(
+      path: Routes.noInternet,
+      builder: (context, state) => const NoConnectionScreen(),
+    ),
   ],
 );
 
 Future<String?> _redirect(BuildContext context, GoRouterState state) async {
+
+  final hasConnection = await hasInternetAccess();
+
+  if (!hasConnection) {
+    return Routes.noInternet;
+  }
+
   final loggedIn = await context.read<AuthRepository>().isAuthenticated;
 
   final goingToSignIn = state.matchedLocation == Routes.signIn;
