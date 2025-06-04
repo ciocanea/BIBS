@@ -4,6 +4,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../routing/routes.dart';
 import '../../../utils/result.dart';
+import '../../connectivity_checker/connectivity_checker.dart';
 import '../view_models/reset_password_viewmodel.dart';
 
 
@@ -112,6 +113,15 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                           );
                           context.go(Routes.signIn);
                         case Error<void>():
+                          final hasConnection = await hasInternetAccess();
+                          
+                          if (!hasConnection) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('No internet connection.')),
+                            );
+                            return;
+                          }
+
                           final error = result.error;
       
                           if(error is AuthException && error.statusCode == '422') {

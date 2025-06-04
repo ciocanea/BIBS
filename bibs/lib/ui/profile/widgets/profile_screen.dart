@@ -32,7 +32,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     widget.viewModel.load().then((result) {
       if (result is Error) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to load profile: ${result.error}'))
+          SnackBar(content: Text('Failed to load page. Please check your connection and try again.'))
         );
       }
     });
@@ -192,7 +192,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     case Error<void>():
                                       ScaffoldMessenger.of(context).showSnackBar(
                                         SnackBar(
-                                          content: Text('Failed to update image.')
+                                          content: Text('Failed to update image. Please check your internet connection and try again.')
                                         )
                                       );
                                   }
@@ -211,7 +211,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     case Error<void>():
                                       ScaffoldMessenger.of(context).showSnackBar(
                                         SnackBar(
-                                          content: Text('Failed to update username.')
+                                          content: Text('Failed to update username. Please check your internet connection and try again.')
                                         )
                                       );
                                   }
@@ -230,7 +230,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     case Error<void>():
                                       ScaffoldMessenger.of(context).showSnackBar(
                                         SnackBar(
-                                          content: Text('Failed to update campus.')
+                                          content: Text('Failed to update campus. Please check your internet connection and try again.')
                                         )
                                       );
                                   }
@@ -325,7 +325,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     else {
                                       ScaffoldMessenger.of(context).showSnackBar(
                                         SnackBar(
-                                          content: Text('Failed to change password.')
+                                          content: Text('Failed to change password. Please check your internet connection and try again.')
                                         )
                                       );
                                   }
@@ -365,8 +365,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           );
 
                           if (confirm == true) {
-                          await widget.viewModel.signOut();
-                          context.go(Routes.signIn);
+                            final result = await widget.viewModel.signOut();
+
+                            switch (result) {
+                              case Ok<void>():
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text('Signed out.')
+                                  )
+                                );
+                                context.go(Routes.signIn); 
+                              case Error<void>():
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text('Failed to sign out. Please check your internet connection and try again.')
+                                  )
+                                );
+                            }
                           }
                         },
                         child: Text('Sign Out'),
@@ -403,8 +418,41 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           );
 
                           if (confirm == true) {
-                            await widget.viewModel.deteleAccount(userProfile.userId);
-                            await widget.viewModel.signOut();
+                            final deleteAccountResult = await widget.viewModel.deteleAccount(userProfile.userId);
+
+                            switch (deleteAccountResult) {
+                              case Ok<void>():
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text('Account deleted.')
+                                  )
+                                );
+                              case Error<void>():
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text('Failed to delete account. Please check your internet connection and try again.')
+                                  )
+                                );
+                                return;
+                            }
+
+                            final signOutResult = await widget.viewModel.signOut();
+
+                            switch (signOutResult) {
+                              case Ok<void>():
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text('Signed out.')
+                                  )
+                                );
+                              case Error<void>():
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text('Failed to sign out. Please check your internet connection and try again.')
+                                  )
+                                );
+                                return;
+                            }
                             context.go(Routes.signIn);
                           }
                         }, 

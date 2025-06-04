@@ -4,6 +4,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../routing/routes.dart';
 import '../../../utils/result.dart';
+import '../../connectivity_checker/connectivity_checker.dart';
 import '../view_models/forgot_password_viewmodel.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
@@ -108,6 +109,16 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                             )
                           );
                         case Error<void>():
+                          final hasConnection = await hasInternetAccess();
+                          
+                          if (!hasConnection) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('No internet connection.')),
+                            );
+                            context.go(Routes.noInternet);
+                            return;
+                          }
+
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text('Failed to send password reset email.')

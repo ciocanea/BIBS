@@ -24,7 +24,7 @@ class _StatsScreenState extends State<StatsScreen> {
     widget.viewModel.load().then((result) {
       if (result is Error) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to load profile: ${result.error}'))
+          SnackBar(content: Text('Failed to load page. Please check your internet connection and try again.'))
         );
       }
     });

@@ -5,6 +5,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../routing/routes.dart';
 import '../../../utils/result.dart';
+import '../../connectivity_checker/connectivity_checker.dart';
 import '../view_models/sign_in_viewmodel.dart';
 
 class SignInScreen extends StatefulWidget{
@@ -23,7 +24,7 @@ class _SignInScreenState extends State<SignInScreen> {
   final TextEditingController _passwordController = TextEditingController();
 
   @override
-    void initState() {
+  void initState() {
     super.initState();
 
     Supabase.instance.client.auth.onAuthStateChange.listen((data) {
@@ -139,6 +140,16 @@ class _SignInScreenState extends State<SignInScreen> {
                         case Ok<void>():
                           context.go(Routes.session);
                         case Error<void>():
+                          final hasConnection = await hasInternetAccess();
+                          
+                          if (!hasConnection) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('No internet connection.')),
+                            );
+                            context.go(Routes.noInternet);
+                            return;
+                          }
+
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(content: Text('Invalid credentials.')),
                           );

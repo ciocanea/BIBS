@@ -23,7 +23,7 @@ class _StudyLogScreenState extends State<StudyLogScreen> {
     widget.viewModel.load().then((result) {
       if (result is Error) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to load profile: ${result.error}'))
+          SnackBar(content: Text('Failed to load page. Please check your internet connection and try again.'))
         );
       }
     });
@@ -110,7 +110,7 @@ class _StudyLogScreenState extends State<StudyLogScreen> {
                                       );
                                     case Error<void>():
                                       ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(content: Text('Failed to delete study session.'))
+                                        SnackBar(content: Text('Failed to delete study session. Please check your internet connection and try again.'))
                                       );
                                   }
                                 });
