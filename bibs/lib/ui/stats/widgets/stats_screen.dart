@@ -52,13 +52,6 @@ class _StatsScreenState extends State<StatsScreen> {
                   children: [
                     SizedBox(height: 32.0),
 
-                    // Text(
-                    //   "Total study time at ${userProfile.campus}",
-                    //   style: Theme.of(context).textTheme.headlineMedium,
-                    // ),
-
-                    // SizedBox(height: 16.0),
-
                     Material(
                       shape: const CircleBorder(),
                       elevation: Dimentions.elevation,
@@ -68,15 +61,15 @@ class _StatsScreenState extends State<StatsScreen> {
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           border: Border.all(
-                            color: AppColors.primaryColor,
+                            color: Theme.of(context).colorScheme.primary,
                             width: 8.0,
                           ),
-                          color: AppColors.secondaryColor,
+                          color: Theme.of(context).colorScheme.secondary,
                         ),
                         child: Center(
                           child: Text(
                             widget.viewModel.formattedUserTime,
-                            style: Theme.of(context).textTheme.headlineLarge,
+                            style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: AppColors.darkSecondaryColor, height: 1.2)
                           ),
                         ),
                       ),

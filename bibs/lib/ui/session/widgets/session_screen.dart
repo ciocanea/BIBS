@@ -78,15 +78,15 @@ class _SessionScreenState extends State<SessionScreen> with WidgetsBindingObserv
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         border: Border.all(
-                          color: AppColors.primaryColor,
+                          color: Theme.of(context).colorScheme.primary,
                           width: 8.0,
                         ),
-                        color: AppColors.secondaryColor,
+                        color: Theme.of(context).colorScheme.secondary,
                       ),
                       child: Center(
                         child: Text(
                           _viewModel.formattedTime,
-                          style: const TextStyle(fontSize: 24),
+                          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppColors.darkSecondaryColor)
                         ),
                       ),
                     ),
