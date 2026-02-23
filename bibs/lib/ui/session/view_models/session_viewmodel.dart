@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 
 import '../../../data/models/user_profile/user_profile_model.dart';
 import '../../../data/repositories/session/study_session_repository.dart';
@@ -80,6 +81,7 @@ class SessionViewModel extends ChangeNotifier{
 
 
   void start() async {
+    await WakelockPlus.enable();
     _stopwatch.start();
     notifyListeners();
   }
@@ -87,10 +89,14 @@ class SessionViewModel extends ChangeNotifier{
   void pauseUnpause() async {
     try {
       if (_stopwatch.isRunning) {
+        await WakelockPlus.disable();
+
         _stopwatch.stop();
         _isPaused = true;
       }
       else {
+        await WakelockPlus.enable();
+
         _stopwatch.start();
         _isPaused = false;
       }
@@ -102,6 +108,8 @@ class SessionViewModel extends ChangeNotifier{
 
   Future<Result<void>> updateTotalTime() async {
     try {
+      await WakelockPlus.disable();
+      
       _stopwatch.stop();
       int sessionDuration = _stopwatch.elapsedMilliseconds;
       _stopwatch.reset();
