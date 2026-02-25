@@ -43,9 +43,10 @@ class _SessionScreenState extends State<SessionScreen> with WidgetsBindingObserv
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.paused ||
+    if ((state == AppLifecycleState.paused ||
         state == AppLifecycleState.hidden ||
-        state == AppLifecycleState.inactive) {
+        state == AppLifecycleState.inactive) &&
+        (_viewModel.isRunning && !_viewModel.isPaused)) {
       _viewModel.pauseOnAppInactive();
       return;
     }
@@ -68,7 +69,7 @@ class _SessionScreenState extends State<SessionScreen> with WidgetsBindingObserv
           builder: (context) => AlertDialog(
             title: const Text('OOPS! Your session is paused.'),
             content: const Text(
-              'Looks like your session was paused because you exited the app or your phone was closed. Keep your focus, you got this!',
+              'Looks like your session was paused because you exited the app or your phone was closed.\n\nKeep your focus, you got this!',
             ),
             actions: [
               TextButton(
@@ -200,7 +201,7 @@ class _SessionScreenState extends State<SessionScreen> with WidgetsBindingObserv
           child: const Text("End session"),
         ),
       ];
-    } else if (_viewModel.isPaused) {
+    } else if (_viewModel.isRunning && _viewModel.isPaused) {
       return [
         ElevatedButton(
           onPressed: _viewModel.pauseUnpause,

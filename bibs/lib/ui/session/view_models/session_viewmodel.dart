@@ -29,9 +29,9 @@ class SessionViewModel extends ChangeNotifier{
   UserProfile? _userProfile;
   UserProfile? get userProfile => _userProfile;
 
-  bool get isRunning => _stopwatch.isRunning;
+  bool get isRunning => _stopwatch.elapsedMicroseconds != 0;
 
-  bool _isPaused = false;
+  bool _isPaused = true;
   bool get isPaused => _isPaused;
 
   bool _showPausedDialogOnResume = false;
@@ -90,6 +90,7 @@ class SessionViewModel extends ChangeNotifier{
   void start() async {
     await WakelockPlus.enable();
     _stopwatch.start();
+    _isPaused = false;
     notifyListeners();
   }
   
@@ -114,10 +115,6 @@ class SessionViewModel extends ChangeNotifier{
   }
 
   Future<void> pauseOnAppInactive() async {
-    if (_isPaused) {
-      return;
-    }
-
     _stopwatch.stop();
     _isPaused = true;
     _showPausedDialogOnResume = true;
@@ -127,7 +124,6 @@ class SessionViewModel extends ChangeNotifier{
   Future<Result<void>> updateTotalTime() async {
     try {
       await WakelockPlus.disable();
-      
       _stopwatch.stop();
       int sessionDuration = _stopwatch.elapsedMilliseconds;
       _stopwatch.reset();
