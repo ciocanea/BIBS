@@ -45,7 +45,7 @@ class MyNavigationBar extends StatelessWidget {
         onTap: (idx) {
           final sessionViewModel = context.read<SessionViewModel>();
 
-          if ((sessionViewModel.isRunning || sessionViewModel.isPaused) && idx != 0) {
+          if (sessionViewModel.isRunning && idx != 0) {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(content: Text('End your session before switching tabs.')),
             );
