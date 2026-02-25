@@ -29,18 +29,26 @@ class SessionViewModel extends ChangeNotifier{
   UserProfile? _userProfile;
   UserProfile? get userProfile => _userProfile;
 
-  bool get isRunning => _stopwatch.isRunning;
+  bool get isRunning => _stopwatch.elapsedMicroseconds != 0;
 
-  bool _isPaused = false;
+  bool _isPaused = true;
   bool get isPaused => _isPaused;
+
+  bool _showPausedDialogOnResume = false;
+  bool get showPausedDialogOnResume => _showPausedDialogOnResume;
+  set showPausedDialogOnResume(bool value) => _showPausedDialogOnResume = value;
+
+  bool _isPausedDialogOpen = false;
+  bool get isPausedDialogOpen => _isPausedDialogOpen;
+  set isPausedDialogOpen(bool value) => _isPausedDialogOpen = value;
+
 
   String get formattedTime {
     final milli = _stopwatch.elapsed.inMilliseconds;
-    final milliseconds = (milli % 1000).toString().padLeft(3, '0');
     final seconds = ((milli ~/ 1000) % 60).toString().padLeft(2, '0');
     final minutes = ((milli ~/ 1000 ~/ 60) % 60).toString().padLeft(2, '0');
     final hours = ((milli ~/ 1000 ~/ 60) ~/ 60).toString().padLeft(2, '0');
-    return '$hours:$minutes:$seconds:$milliseconds';
+    return '$hours:$minutes:$seconds';
   }
 
 
@@ -79,37 +87,43 @@ class SessionViewModel extends ChangeNotifier{
     }
   }
 
-
   void start() async {
     await WakelockPlus.enable();
     _stopwatch.start();
+    _isPaused = false;
     notifyListeners();
   }
   
   void pauseUnpause() async {
     try {
-      if (_stopwatch.isRunning) {
-        await WakelockPlus.disable();
-
-        _stopwatch.stop();
-        _isPaused = true;
-      }
-      else {
+      if (_isPaused) {
         await WakelockPlus.enable();
 
         _stopwatch.start();
-        _isPaused = false;
       }
+      else {
+        await WakelockPlus.disable();
+
+        _stopwatch.stop();
+      }
+
+      _isPaused = !_isPaused;
     }
     finally {
       notifyListeners();
     }
   }
 
+  Future<void> pauseOnAppInactive() async {
+    _stopwatch.stop();
+    _isPaused = true;
+    _showPausedDialogOnResume = true;
+    notifyListeners();
+  }
+
   Future<Result<void>> updateTotalTime() async {
     try {
       await WakelockPlus.disable();
-      
       _stopwatch.stop();
       int sessionDuration = _stopwatch.elapsedMilliseconds;
       _stopwatch.reset();

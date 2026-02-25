@@ -43,10 +43,45 @@ class _SessionScreenState extends State<SessionScreen> with WidgetsBindingObserv
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.paused || state == AppLifecycleState.hidden || state == AppLifecycleState.inactive) {
-      if (_viewModel.isRunning && !_viewModel.isPaused) {
-        _viewModel.pauseUnpause();
-      }
+    if ((state == AppLifecycleState.paused ||
+        state == AppLifecycleState.hidden ||
+        state == AppLifecycleState.inactive) &&
+        (_viewModel.isRunning && !_viewModel.isPaused)) {
+      _viewModel.pauseOnAppInactive();
+      return;
+    }
+
+    if (state == AppLifecycleState.resumed &&
+        _viewModel.showPausedDialogOnResume &&
+        !_viewModel.isPausedDialogOpen &&
+        mounted) {
+      _viewModel.showPausedDialogOnResume = false;
+      _viewModel.isPausedDialogOpen = true;
+
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        if (!mounted) {
+          _viewModel.isPausedDialogOpen = false;
+          return;
+        }
+
+        await showDialog<void>(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('OOPS! Your session is paused.'),
+            content: const Text(
+              'Looks like your session was paused because you exited the app or your phone was closed.\n\nKeep your focus, you got this!',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('Ok'),
+              ),
+            ],
+          ),
+        );
+
+        _viewModel.isPausedDialogOpen = false;
+      });
     }
   }
 
@@ -166,7 +201,7 @@ class _SessionScreenState extends State<SessionScreen> with WidgetsBindingObserv
           child: const Text("End session"),
         ),
       ];
-    } else if (_viewModel.isPaused) {
+    } else if (_viewModel.isRunning && _viewModel.isPaused) {
       return [
         ElevatedButton(
           onPressed: _viewModel.pauseUnpause,
